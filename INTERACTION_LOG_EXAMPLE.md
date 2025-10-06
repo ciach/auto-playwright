@@ -10,6 +10,8 @@ When you run a task using `auto()`, the library will track all interactions with
 
 ## Example Usage
 
+### With Playwright Test
+
 ```typescript
 import { test } from '@playwright/test';
 import { auto } from 'auto-playwright';
@@ -23,8 +25,30 @@ test('example with interaction logging', async ({ page }) => {
   );
   
   // Access the interaction log
+  // When using with 'test', the result includes the full TaskResult
   console.log('Interactions:', JSON.stringify(result.interactions, null, 2));
 });
+```
+
+### Without Playwright Test
+
+```typescript
+import { chromium } from '@playwright/test';
+import { auto } from 'auto-playwright';
+
+const browser = await chromium.launch();
+const page = await browser.newPage();
+await page.goto('https://example.com');
+
+const result = await auto(
+  'Click the submit button',
+  { page }  // No 'test' parameter
+);
+
+// Access the interaction log
+console.log('Interactions:', JSON.stringify(result.interactions, null, 2));
+
+await browser.close();
 ```
 
 ## Interaction Log Structure
@@ -115,6 +139,8 @@ You can use the interaction log to:
 ## Saving Interaction Logs
 
 ```typescript
+import { test } from '@playwright/test';
+import { auto } from 'auto-playwright';
 import { writeFileSync } from 'fs';
 
 test('save interaction log', async ({ page }) => {
@@ -122,10 +148,47 @@ test('save interaction log', async ({ page }) => {
   
   const result = await auto('Complete the form', { page, test });
   
-  // Save to file
+  // Ensure interactions exist before saving
+  if (result.interactions && result.interactions.length > 0) {
+    // Save to file
+    writeFileSync(
+      'interaction-log.json',
+      JSON.stringify(result.interactions, null, 2)
+    );
+    console.log(`Saved ${result.interactions.length} interactions to interaction-log.json`);
+  } else {
+    console.log('No interactions were logged');
+  }
+});
+```
+
+### Practical Example - Save After Each Test
+
+```typescript
+import { test } from '@playwright/test';
+import { auto } from 'auto-playwright';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
+test('login flow with interaction logging', async ({ page }) => {
+  await page.goto('https://example.com/login');
+  
+  const result = await auto(
+    'Fill in email with user@example.com, fill in password with secret123, and click login',
+    { page, test }
+  );
+  
+  // Save interactions with timestamp
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const filename = `interactions-login-${timestamp}.json`;
+  
   writeFileSync(
-    'interaction-log.json',
-    JSON.stringify(result.interactions, null, 2)
+    join(__dirname, 'logs', filename),
+    JSON.stringify({
+      test: 'login flow',
+      timestamp: new Date().toISOString(),
+      interactions: result.interactions
+    }, null, 2)
   );
 });
 ```
