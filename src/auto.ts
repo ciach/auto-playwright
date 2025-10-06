@@ -28,15 +28,26 @@ export const auto = async (
       throw new UnimplementedError(result.errorMessage);
     }
 
+    // Determine the primary return value
+    let returnValue: any;
     if (result.assertion !== undefined) {
-      return result.assertion;
+      returnValue = result.assertion;
+    } else if (result.query !== undefined) {
+      returnValue = result.query;
+    } else {
+      returnValue = undefined;
     }
 
-    if (result.query !== undefined) {
-      return result.query;
+    // Attach the full result (including interactions) to the return value
+    // This allows accessing result.interactions while maintaining backward compatibility
+    if (returnValue !== null && returnValue !== undefined) {
+      if (typeof returnValue === 'object') {
+        return { ...returnValue, _autoPlaywrightResult: result };
+      }
     }
-
-    return undefined;
+    
+    // For primitive return values or undefined, return the full result
+    return result;
   });
 };
 
