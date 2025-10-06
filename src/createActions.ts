@@ -3,18 +3,67 @@ import { randomUUID } from "crypto";
 import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
 import { z } from "zod";
 import { getSanitizeOptions } from "./sanitizeHtml";
+import { ElementInteraction } from "./types";
 
 export const createActions = (
   page: Page,
+  interactionLog: ElementInteraction[] = [],
 ): Record<string, RunnableFunctionWithParse<any>> => {
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
+  };
+
+  const logInteraction = async (
+    action: string,
+    elementId?: string,
+    selector?: string,
+    actionData?: Record<string, any>,
+  ) => {
+    try {
+      const locator = elementId
+        ? getLocator(elementId)
+        : selector
+          ? page.locator(selector)
+          : null;
+
+      if (!locator) return;
+
+      const elementInfo = await locator.evaluate((node: Element) => {
+        const attributes: Record<string, string> = {};
+        for (let i = 0; i < node.attributes.length; i++) {
+          const attr = node.attributes[i];
+          if (attr.name !== "data-element-id") {
+            attributes[attr.name] = attr.value;
+          }
+        }
+
+        return {
+          tag: node.tagName.toLowerCase(),
+          attributes,
+          outerHTML: node.outerHTML,
+          text: node.textContent?.trim() || undefined,
+        };
+      });
+
+      interactionLog.push({
+        action,
+        timestamp: new Date().toISOString(),
+        selector,
+        elementId,
+        element: elementInfo,
+        actionData,
+      });
+    } catch (error) {
+      // Silently fail if element is not found or logging fails
+      console.warn(`Failed to log interaction for ${action}:`, error);
+    }
   };
 
   return {
     locator_pressKey: {
       function: async (args: { elementId: string; key: string }) => {
         const { elementId, key } = args;
+        await logInteraction("locator_pressKey", elementId, undefined, { key });
         await getLocator(elementId).press(key);
         return { success: true };
       },
@@ -300,6 +349,7 @@ export const createActions = (
     },
     locator_check: {
       function: async (args: { elementId: string }) => {
+        await logInteraction("locator_check", args.elementId);
         await getLocator(args.elementId).check();
 
         return { success: true };
@@ -324,6 +374,7 @@ export const createActions = (
     },
     locator_uncheck: {
       function: async (args: { elementId: string }) => {
+        await logInteraction("locator_uncheck", args.elementId);
         await getLocator(args.elementId).uncheck();
 
         return { success: true };
@@ -464,6 +515,7 @@ export const createActions = (
     },
     locator_click: {
       function: async (args: { elementId: string }) => {
+        await logInteraction("locator_click", args.elementId);
         await getLocator(args.elementId).click();
 
         return { success: true };
@@ -510,6 +562,9 @@ export const createActions = (
     },
     locator_fill: {
       function: async (args: { value: string; elementId: string }) => {
+        await logInteraction("locator_fill", args.elementId, undefined, {
+          value: args.value,
+        });
         await getLocator(args.elementId).fill(args.value);
 
         return {
@@ -603,6 +658,12 @@ export const createActions = (
             "You must provide at least one of the parameters: value, label, or index.",
           );
         }
+
+        await logInteraction("locator_selectOption", elementId, cssSelector, {
+          value,
+          label,
+          index,
+        });
 
         return { success: true };
       },

@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { type Page, TaskMessage, TaskResult } from "./types";
+import { type Page, TaskMessage, TaskResult, ElementInteraction } from "./types";
 import { prompt, SYSTEM_PROMPT } from "./prompt";
 import { createActions } from "./createActions";
 
@@ -19,7 +19,8 @@ export const completeTask = async (
   let lastFunctionResult: null | { errorMessage: string } | { query: string } =
     null;
 
-  const actions = createActions(page);
+  const interactionLog: ElementInteraction[] = [];
+  const actions = createActions(page, interactionLog);
 
   const debug = task.options?.debug ?? defaultDebug;
 
@@ -67,7 +68,11 @@ export const completeTask = async (
 
   if (debug) {
     console.log("> lastFunctionResult", lastFunctionResult);
+    console.log("> interactionLog", JSON.stringify(interactionLog, null, 2));
   }
 
-  return lastFunctionResult;
+  return {
+    ...(lastFunctionResult as TaskResult),
+    interactions: interactionLog,
+  };
 };
