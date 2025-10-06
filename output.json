@@ -1,0 +1,104 @@
+[
+  {
+    "interactions": [
+      {
+        "action": "locator_click",
+        "timestamp": "2025-10-06T17:10:50.137Z",
+        "elementId": "f96da25d-8f57-4560-86ec-70d8c5c39ed7",
+        "element": {
+          "tag": "a",
+          "attributes": {
+            "href": "/organizations/5f2b4fc18b85550012463331/employees",
+            "class": "nav-items__link  active",
+            "aria-label": "Employees",
+            "data-test-link": "employees-settings"
+          },
+          "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees\" class=\"nav-items__link  active\" aria-label=\"Employees\" data-test-link=\"employees-settings\" data-element-id=\"f96da25d-8f57-4560-86ec-70d8c5c39ed7\">\n  \n    <i class=\"icon-employees-settings\"></i>\n  <!---->\n  Employees\n  \n\n</a>",
+          "text": "Employees"
+        }
+      }
+    ]
+  },
+  {
+    "interactions": [
+      {
+        "action": "locator_click",
+        "timestamp": "2025-10-06T17:10:55.974Z",
+        "elementId": "f78d7e0e-d97e-4a2a-8d0f-7ccd3fe7a586",
+        "element": {
+          "tag": "a",
+          "attributes": {
+            "href": "/organizations/5f2b4fc18b85550012463331/employees/departments",
+            "class": "nav-items__link ",
+            "aria-label": "Departments"
+          },
+          "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees/departments\" class=\"nav-items__link \" aria-label=\"Departments\" data-element-id=\"f78d7e0e-d97e-4a2a-8d0f-7ccd3fe7a586\">\n  \n<!---->  <!---->\n  Departments\n  \n\n</a>",
+          "text": "Departments"
+        }
+      }
+    ]
+  },
+  {
+    "interactions": [
+      {
+        "action": "locator_click",
+        "timestamp": "2025-10-06T17:11:01.472Z",
+        "elementId": "102ce130-7a29-456e-b028-a5956c7c7ee1",
+        "element": {
+          "tag": "button",
+          "attributes": {
+            "id": "add_department",
+            "tabindex": "0",
+            "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+            "data-test-button": "add-department",
+            "type": "button"
+          },
+          "outerHTML": "<button id=\"add_department\" tabindex=\"0\" class=\"desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \" data-test-button=\"add-department\" type=\"button\" data-element-id=\"102ce130-7a29-456e-b028-a5956c7c7ee1\">\n<!----><!---->  Add Department\n<!----></button>",
+          "text": "Add Department"
+        }
+      }
+    ]
+  },
+  {
+    "interactions": [
+      {
+        "action": "locator_fill",
+        "timestamp": "2025-10-06T17:11:07.270Z",
+        "elementId": "f9a56852-0b65-4406-97c9-ad39d75f81c7",
+        "element": {
+          "tag": "input",
+          "attributes": {
+            "id": "ember500__input",
+            "class": "ember-text-field ember-view tb-floating__input ",
+            "data-test-input": "input-name",
+            "type": "text"
+          },
+          "outerHTML": "<input id=\"ember500__input\" class=\"ember-text-field ember-view tb-floating__input \" data-test-input=\"input-name\" type=\"text\" data-element-id=\"f9a56852-0b65-4406-97c9-ad39d75f81c7\">"
+        },
+        "actionData": {
+          "value": "WojtekTest"
+        }
+      }
+    ]
+  },
+  {
+    "interactions": [
+      {
+        "action": "locator_click",
+        "timestamp": "2025-10-06T17:11:59.375Z",
+        "elementId": "51d22d74-756a-46d2-9a48-a16281413458",
+        "element": {
+          "tag": "button",
+          "attributes": {
+            "tabindex": "0",
+            "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+            "data-test-button": "save-department",
+            "type": "button"
+          },
+          "outerHTML": "<button tabindex=\"0\" class=\"desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \" data-test-button=\"save-department\" type=\"button\" data-element-id=\"51d22d74-756a-46d2-9a48-a16281413458\">\n<!----><!---->  Save\n<!----></button>",
+          "text": "Save"
+        }
+      }
+    ]
+  }
+]
