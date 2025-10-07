@@ -66,4 +66,9 @@ export type TemplateManifestEntry = {
 
 export type TemplateManifest = {
   entries: TemplateManifestEntry[];
+  indexes?: {
+    dataTest?: Record<string, string[]>;
+    ariaLabel?: Record<string, string[]>;
+    id?: Record<string, string[]>;
+  };
 };

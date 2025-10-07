@@ -1,24 +1,24 @@
 import { Page } from "@playwright/test";
 import { randomUUID } from "crypto";
-import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
-import { z } from "zod";
-import { getSanitizeOptions } from "./sanitizeHtml";
-import { TEMPLATE_MANIFEST_PATH } from "./config";
 import { existsSync, readFileSync } from "fs";
+import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
+import * as path from "path";
+import { z } from "zod";
+import { TEMPLATE_MANIFEST_PATH, TEMPLATE_ROOT_DIR } from "./config";
 import { resolveTemplatesForUrl } from "./resolveTemplates";
-import { ElementInteraction } from "./types";
+import { getSanitizeOptions } from "./sanitizeHtml";
+import { ElementInteraction, TemplateManifest } from "./types";
 
 export const createActions = (
   page: Page,
   interactionLog: ElementInteraction[] = [],
 ): Record<string, RunnableFunctionWithParse<any>> => {
   // ---- Helpers for route/template resolution ----
-  type Manifest = { entries: { path: string }[] };
+  type Manifest = TemplateManifest;
   const tryLoadManifest = (): Manifest | null => {
     try {
       if (existsSync(TEMPLATE_MANIFEST_PATH)) {
-        const data = JSON.parse(readFileSync(TEMPLATE_MANIFEST_PATH, "utf8"));
-        return data;
+        return JSON.parse(readFileSync(TEMPLATE_MANIFEST_PATH, "utf8")) as Manifest;
       }
     } catch {
       // ignore
@@ -26,8 +26,118 @@ export const createActions = (
     return null;
   };
 
+  const normalizeUrlSegments = (rawUrl: string): string[] => {
+    if (!rawUrl) return [];
+    try {
+      const url = rawUrl.startsWith("http") ? new URL(rawUrl) : new URL(rawUrl, "http://x");
+      return url.pathname
+        .split("/")
+        .map((segment) => segment.toLowerCase())
+        .filter(Boolean);
+    } catch {
+      return rawUrl
+        .replace(/^https?:\/\/[^/]+/, "")
+        .split("/")
+        .map((segment) => segment.toLowerCase())
+        .filter(Boolean);
+    }
+  };
+
+  const templatePathToSegments = (templatePath: string): string[] => {
+    if (!templatePath) return [];
+    return templatePath
+      .replace(/^templates\//, "")
+      .replace(/\.hbs$/, "")
+      .split("/")
+      .map((segment) => segment.toLowerCase())
+      .filter(Boolean);
+  };
+
+  const lastRealSegment = (segments: string[]): string | null => {
+    if (!segments.length) return null;
+    const tail = segments[segments.length - 1];
+    if (tail === "index" && segments.length > 1) {
+      return segments[segments.length - 2];
+    }
+    return tail;
+  };
+
+  const rankTemplatesByUrl = (url: string, candidates: Iterable<string>): string[] => {
+    const urlSegments = normalizeUrlSegments(url);
+    const uniqueCandidates = Array.from(new Set(candidates));
+    const scored = uniqueCandidates.map((candidatePath) => {
+      const segments = templatePathToSegments(candidatePath);
+      const overlap = segments.filter((segment) => urlSegments.includes(segment)).length;
+      const tail = lastRealSegment(segments);
+      const bonusTail = tail && urlSegments.includes(tail) ? 3 : 0;
+      const penaltyDepth = Math.max(0, segments.length - urlSegments.length);
+      const score = overlap * 3 + bonusTail - penaltyDepth;
+      return { path: candidatePath, score, depth: segments.length };
+    });
+    scored.sort((a, b) => b.score - a.score || b.depth - a.depth || a.path.localeCompare(b.path));
+    return scored.map((entry) => entry.path);
+  };
+
+  type AttributeLookupArgs = {
+    dataTestKey?: string;
+    dataTestValue?: string;
+    ariaLabel?: string;
+    id?: string;
+  };
+
+  const resolveByAttributes = (
+    manifest: Manifest | null,
+    url: string,
+    attrs: AttributeLookupArgs,
+  ): { candidates: string[]; primaryTemplate: string | null; reason: string } => {
+    if (!manifest) {
+      return { candidates: [], primaryTemplate: null, reason: "no-manifest" };
+    }
+
+    const indexes = manifest.indexes;
+    if (!indexes) {
+      return { candidates: [], primaryTemplate: null, reason: "no-indexes" };
+    }
+
+    const candidates = new Set<string>();
+    const normalizedDataTestKey = attrs.dataTestKey?.trim().toLowerCase();
+    const normalizedDataTestValue = attrs.dataTestValue?.trim().toLowerCase();
+
+    if (normalizedDataTestKey && normalizedDataTestValue && indexes.dataTest) {
+      const lookupKey = `${normalizedDataTestKey}:${normalizedDataTestValue}`;
+      for (const entry of indexes.dataTest[lookupKey] ?? []) {
+        candidates.add(entry);
+      }
+    }
+
+    const normalizedAriaLabel = attrs.ariaLabel?.trim().toLowerCase();
+    if (normalizedAriaLabel && indexes.ariaLabel) {
+      for (const entry of indexes.ariaLabel[normalizedAriaLabel] ?? []) {
+        candidates.add(entry);
+      }
+    }
+
+    const normalizedId = attrs.id?.trim().toLowerCase();
+    if (normalizedId && indexes.id) {
+      for (const entry of indexes.id[normalizedId] ?? []) {
+        candidates.add(entry);
+      }
+    }
+
+    if (candidates.size === 0) {
+      return { candidates: [], primaryTemplate: null, reason: "no-attribute-match" };
+    }
+
+    const ordered = rankTemplatesByUrl(url, candidates);
+    return {
+      candidates: ordered,
+      primaryTemplate: ordered[0] ?? null,
+      reason: "attribute-match",
+    };
+  };
+
   const resolveForUrl = (url: string, manifest: Manifest | null) =>
-    resolveTemplatesForUrl(url, manifest as any);
+    resolveTemplatesForUrl(url, manifest);
 
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
@@ -126,10 +236,125 @@ export const createActions = (
       },
     },
 
+    resolveTemplateForElement: {
+      function: async (args: AttributeLookupArgs) => {
+        const manifest = tryLoadManifest();
+        const url = page.url();
+        return resolveByAttributes(manifest, url, args ?? {});
+      },
+      name: "resolveTemplateForElement",
+      description:
+        "Resolve HBS file(s) declaring an element via data-test, aria-label, or id attributes, ranked by the current URL.",
+      parse: (args: string) => {
+        return z
+          .object({
+            dataTestKey: z.string().optional(),
+            dataTestValue: z.string().optional(),
+            ariaLabel: z.string().optional(),
+            id: z.string().optional(),
+          })
+          .parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {
+          dataTestKey: {
+            type: "string",
+            description: "Suffix of data-test-* attribute, e.g. 'button' for data-test-button",
+          },
+          dataTestValue: {
+            type: "string",
+            description: "Value of the data-test-* attribute, e.g. 'submit-order'",
+          },
+          ariaLabel: {
+            type: "string",
+            description: "aria-label attribute value to resolve",
+          },
+          id: {
+            type: "string",
+            description: "Element id attribute value to resolve",
+          },
+        },
+      },
+    },
+
+    resolveTemplateForLastElement: {
+      function: async () => {
+        const manifest = tryLoadManifest();
+        const url = page.url();
+        for (let i = interactionLog.length - 1; i >= 0; i--) {
+          const entry = interactionLog[i];
+          const attrs = entry?.element?.attributes;
+          if (!attrs) continue;
+
+          const entries = Object.entries(attrs);
+          const dataTestEntry = entries.find(([name, value]) => {
+            if (!value) return false;
+            const lower = name.toLowerCase();
+            return lower === "data-test" || lower.startsWith("data-test-");
+          });
+
+          let dataTestKey: string | undefined;
+          let dataTestValue: string | undefined;
+          if (dataTestEntry) {
+            const [attrName, attrValue] = dataTestEntry;
+            const lower = attrName.toLowerCase();
+            if (lower === "data-test") {
+              dataTestKey = "data-test";
+            } else if (lower.startsWith("data-test-")) {
+              dataTestKey = attrName.slice("data-test-".length);
+            }
+            dataTestValue = String(attrValue);
+          }
+
+          const ariaLabel = attrs["aria-label"] ? String(attrs["aria-label"]) : undefined;
+          const id = attrs.id ? String(attrs.id) : undefined;
+
+          const result = resolveByAttributes(manifest, url, {
+            dataTestKey,
+            dataTestValue,
+            ariaLabel,
+            id,
+          });
+
+          return {
+            ...result,
+            lookedUpFrom: { dataTestKey, dataTestValue, ariaLabel, id },
+          };
+        }
+
+        return { candidates: [], primaryTemplate: null, reason: "no-last-element" };
+      },
+      name: "resolveTemplateForLastElement",
+      description:
+        "Resolve templates for the most recent logged element using stored attributes and manifest indexes.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
+    },
+
     openTemplate: {
-      function: async ({ path }: { path: string }) => {
-        // Nothing to do inside the browser; return an instruction for the host.
-        return { openFile: path };
+      function: async ({ path: relPath }: { path: string }) => {
+        const normalized = relPath.replace(/^\.?\/*/, "");
+        const absFromRoot = path.resolve(TEMPLATE_ROOT_DIR, normalized);
+        const absWithTemplates = normalized.startsWith("templates/")
+          ? absFromRoot
+          : path.resolve(TEMPLATE_ROOT_DIR, "templates", normalized);
+        const chosen = existsSync(absFromRoot)
+          ? absFromRoot
+          : existsSync(absWithTemplates)
+            ? absWithTemplates
+            : absFromRoot;
+
+        return {
+          openFile: chosen,
+          openFileRelative: relPath,
+          templateRoot: TEMPLATE_ROOT_DIR,
+        };
       },
       name: "openTemplate",
       description:

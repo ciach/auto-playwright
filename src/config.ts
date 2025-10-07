@@ -5,6 +5,9 @@ export const MAX_TASK_CHARS = 3000;
 export const TEMPLATE_MANIFEST_PATH =
   process.env.TEMPLATE_MANIFEST_PATH ?? "var/llm/template-manifest.json";
 
+export const TEMPLATE_ROOT_DIR =
+  process.env.TEMPLATE_ROOT_DIR ?? process.cwd();
+
 // Used to access the Ember app via the module loader inside the running page.
 // Defaults to the value implied by your router import: 'travelbank/config/environment'.
 export const EMBER_MODULE_PREFIX =
