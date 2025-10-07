@@ -105,9 +105,6 @@ export const createActions = (
   return {
     // ---- Route/context helpers for the LLM ----
     getRouteContext: {
-      description:
-        "Returns the current Ember routeName and URL from inside the running app.",
-      parameters: z.object({}),
       function: async () => {
         const info = await page.evaluate((modulePrefix: string) => {
           try {
@@ -131,12 +128,19 @@ export const createActions = (
         }, EMBER_MODULE_PREFIX);
         return info;
       },
+      name: "getRouteContext",
+      description:
+        "Returns the current Ember routeName and URL from inside the running app.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
     },
 
     resolveTemplateForCurrentPage: {
-      description:
-        "Resolves the most specific HBS template file for the current page using routeName and an optional manifest.",
-      parameters: z.object({}),
       function: async () => {
         const info = await page.evaluate((modulePrefix: string) => {
           try {
@@ -167,15 +171,42 @@ export const createActions = (
           primaryTemplate: stack.primary,
         };
       },
+      name: "resolveTemplateForCurrentPage",
+      description:
+        "Resolves the most specific HBS template file for the current page using routeName and an optional manifest.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
     },
 
     openTemplate: {
-      description:
-        "Return a directive to open the given template path in the editor or host environment.",
-      parameters: z.object({ path: z.string() }),
       function: async ({ path }: { path: string }) => {
         // Nothing to do inside the browser; return an instruction for the host.
         return { openFile: path };
+      },
+      name: "openTemplate",
+      description:
+        "Return a directive to open the given template path in the editor or host environment.",
+      parse: (args: string) => {
+        return z
+          .object({
+            path: z.string(),
+          })
+          .parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {
+          path: {
+            type: "string",
+            description: "The template file path to open",
+          },
+        },
+        required: ["path"],
       },
     },
 
