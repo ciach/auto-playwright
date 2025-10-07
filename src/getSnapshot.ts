@@ -81,12 +81,30 @@ export const getSnapshot = async (page: Page) => {
       if (!container) {
         // Try to get container from a running Ember app instance
         const emberApp = (window as any)[modulePrefix];
+        debug.steps.push(`window.${modulePrefix} exists: ${!!emberApp}`);
+        
         const altContainer = emberApp?.__container__ || 
                             emberApp?.__deprecatedInstance__?.__container__;
         debug.steps.push(`alt container from window.${modulePrefix}: ${!!altContainer}`);
-        if (altContainer) {
-          const routerService = altContainer?.lookup?.("service:router");
-          const router = altContainer?.lookup?.("router:main");
+        
+        // Try to find container in window.Ember namespace
+        const EmberNS = (window as any).Ember;
+        debug.steps.push(`window.Ember exists: ${!!EmberNS}`);
+        
+        // Try to get application instance from Ember namespace
+        const appInstance = EmberNS?.Application?.NAMESPACES?.find?.((ns: any) => 
+          ns.name === modulePrefix || ns.modulePrefix === modulePrefix
+        );
+        debug.steps.push(`Ember.Application.NAMESPACES app: ${!!appInstance}`);
+        
+        const nsContainer = appInstance?.__container__ || appInstance?.__deprecatedInstance__?.__container__;
+        debug.steps.push(`namespace container: ${!!nsContainer}`);
+        
+        const finalContainer = altContainer || nsContainer;
+        
+        if (finalContainer) {
+          const routerService = finalContainer?.lookup?.("service:router");
+          const router = finalContainer?.lookup?.("router:main");
           debug.steps.push(`using alt container - routerService: ${!!routerService}, router: ${!!router}`);
           const routeName =
             (routerService && (routerService as any).currentRouteName) ||
