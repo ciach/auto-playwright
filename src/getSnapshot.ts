@@ -51,16 +51,39 @@ export const getSnapshot = async (page: Page) => {
   const dom = sanitizeHtml(await page.content());
   const url = page.url();
   const route = await page.evaluate((modulePrefix: string) => {
+    const debug: any = { steps: [] };
     try {
       const req = (window as any).require || (window as any).requirejs;
-      const app = req && req(`${modulePrefix}/app` )?.default;
-      const container = app?.__container__;
+      debug.steps.push(`require exists: ${!!req}`);
+      
+      if (!req) {
+        debug.error = 'No require/requirejs found on window';
+        return { routeName: null, currentURL: window.location.href, queryParams: {}, debug };
+      }
+      
+      const app = req(`${modulePrefix}/app`)?.default;
+      debug.steps.push(`app loaded: ${!!app}`);
+      
+      if (!app) {
+        debug.error = `Could not load ${modulePrefix}/app`;
+        return { routeName: null, currentURL: window.location.href, queryParams: {}, debug };
+      }
+      
+      const container = app.__container__;
+      debug.steps.push(`container exists: ${!!container}`);
+      
       const routerService = container?.lookup?.("service:router");
+      debug.steps.push(`routerService exists: ${!!routerService}`);
+      
       const router = container?.lookup?.("router:main");
+      debug.steps.push(`router exists: ${!!router}`);
+      
       const routeName =
         (routerService && (routerService as any).currentRouteName) ||
         (router && (router as any).currentRouteName) ||
         null;
+      debug.steps.push(`routeName: ${routeName}`);
+      
       const currentURL =
         (routerService && (routerService as any).currentURL) ||
         (router && (router as any).currentURL) ||
@@ -70,12 +93,14 @@ export const getSnapshot = async (page: Page) => {
           typeof (routerService as any).currentRoute === "object" &&
           ((routerService as any).currentRoute as any).queryParams) ||
         {};
-      return { routeName, currentURL, queryParams: qp };
-    } catch (e) {
+      return { routeName, currentURL, queryParams: qp, debug };
+    } catch (e: any) {
+      debug.error = e.message || String(e);
       return {
         routeName: null,
         currentURL: window.location.href,
         queryParams: {},
+        debug,
       };
     }
   }, EMBER_MODULE_PREFIX);
@@ -83,6 +108,9 @@ export const getSnapshot = async (page: Page) => {
   const manifest = tryLoadManifest();
   const stack = deriveRenderStack(route.routeName, manifest);
   console.log(`[getSnapshot] routeName=${route.routeName}, candidates=${stack.candidates.length}, primary=${stack.primary}`);
+  if ((route as any).debug) {
+    console.log(`[getSnapshot] debug:`, JSON.stringify((route as any).debug, null, 2));
+  }
 
   return {
     dom,
