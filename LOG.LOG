@@ -3,14 +3,10 @@
 [getSnapshot] debug: {
   "steps": [
     "require exists: true",
-    "app module loaded: true",
-    "app instance: true",
-    "container exists: false",
-    "window.travelbank exists: false",
-    "alt container from window.travelbank: false",
-    "window.Ember exists: false",
-    "Ember.Application.NAMESPACES app: false",
-    "namespace container: false"
-  ],
-  "error": "Could not find container"
+    "failed to load service:router module",
+    "loaded router module: true",
+    "root element found: true",
+    "ember view on root: false",
+    "routeName: null"
+  ]
 }
