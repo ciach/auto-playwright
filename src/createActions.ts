@@ -33,6 +33,8 @@ export const createActions = (
     return page.locator(`[data-element-id="${elementId}"]`);
   };
 
+  const elementSelectors = new Map<string, string>();
+
   const logInteraction = async (
     action: string,
     elementId?: string,
@@ -154,7 +156,12 @@ export const createActions = (
     locator_pressKey: {
       function: async (args: { elementId: string; key: string }) => {
         const { elementId, key } = args;
-        await logInteraction("locator_pressKey", elementId, undefined, { key });
+        await logInteraction(
+          "locator_pressKey",
+          elementId,
+          elementSelectors.get(elementId),
+          { key },
+        );
         await getLocator(elementId).press(key);
         return { success: true };
       },
@@ -210,6 +217,7 @@ export const createActions = (
       function: async (args: { cssSelector: string }) => {
         const locator = page.locator(args.cssSelector);
         const elementId = randomUUID();
+        elementSelectors.set(elementId, args.cssSelector);
         await locator
           .first()
           .evaluate(
@@ -440,7 +448,11 @@ export const createActions = (
     },
     locator_check: {
       function: async (args: { elementId: string }) => {
-        await logInteraction("locator_check", args.elementId);
+        await logInteraction(
+          "locator_check",
+          args.elementId,
+          elementSelectors.get(args.elementId),
+        );
         await getLocator(args.elementId).check();
 
         return { success: true };
@@ -465,7 +477,11 @@ export const createActions = (
     },
     locator_uncheck: {
       function: async (args: { elementId: string }) => {
-        await logInteraction("locator_uncheck", args.elementId);
+        await logInteraction(
+          "locator_uncheck",
+          args.elementId,
+          elementSelectors.get(args.elementId),
+        );
         await getLocator(args.elementId).uncheck();
 
         return { success: true };
@@ -606,7 +622,11 @@ export const createActions = (
     },
     locator_click: {
       function: async (args: { elementId: string }) => {
-        await logInteraction("locator_click", args.elementId);
+        await logInteraction(
+          "locator_click",
+          args.elementId,
+          elementSelectors.get(args.elementId),
+        );
         await getLocator(args.elementId).click();
 
         return { success: true };
@@ -653,9 +673,14 @@ export const createActions = (
     },
     locator_fill: {
       function: async (args: { value: string; elementId: string }) => {
-        await logInteraction("locator_fill", args.elementId, undefined, {
-          value: args.value,
-        });
+        await logInteraction(
+          "locator_fill",
+          args.elementId,
+          elementSelectors.get(args.elementId),
+          {
+            value: args.value,
+          },
+        );
         await getLocator(args.elementId).fill(args.value);
 
         return {
@@ -750,11 +775,18 @@ export const createActions = (
           );
         }
 
-        await logInteraction("locator_selectOption", elementId, cssSelector, {
-          value,
-          label,
-          index,
-        });
+        await logInteraction(
+          "locator_selectOption",
+          elementId,
+          elementId
+            ? elementSelectors.get(elementId)
+            : cssSelector,
+          {
+            value,
+            label,
+            index,
+          },
+        );
 
         return { success: true };
       },
@@ -1205,9 +1237,11 @@ export const createActions = (
           .getByRole(args.role, { exact: args.exact ?? false })
           .all();
         const elementIds: string[] = [];
+        const selectorHint = `role=${args.role}${args.exact ? " (exact)" : ""}`;
 
         for (const locator of locators) {
           const elementId = randomUUID();
+          elementSelectors.set(elementId, selectorHint);
           await locator.evaluate(
             (node, id) => node.setAttribute("data-element-id", id),
             elementId,
@@ -1255,10 +1289,12 @@ export const createActions = (
           .all();
 
         const elementIds: string[] = [];
+        const selectorHint = `text=${args.text}${args.exact ? " (exact)" : ""}`;
 
         for (const locator of allLocators) {
           if (await locator.isVisible()) {
             const elementId = randomUUID();
+            elementSelectors.set(elementId, selectorHint);
             await locator.evaluate(
               (node, id) => node.setAttribute("data-element-id", id),
               elementId,
