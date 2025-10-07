@@ -78,26 +78,30 @@ export const getSnapshot = async (page: Page) => {
         debug.steps.push(`failed to load router module`);
       }
       
-      // Try to find router instance in DOM
-      const rootElement = document.querySelector('[data-ember-extension]') || 
-                         document.querySelector('.ember-application') ||
-                         document.body;
-      debug.steps.push(`root element found: ${!!rootElement}`);
+      // Try to find router instance in DOM - search all elements
+      const allElements = document.querySelectorAll('*');
+      let emberView = null;
+      let owner = null;
       
-      // Try to get router from element's Ember view
-      const emberView = (rootElement as any)?.__ember_view__ || 
-                       (rootElement as any)?.__EMBER_VIEW__;
-      debug.steps.push(`ember view on root: ${!!emberView}`);
-      
-      if (emberView) {
-        const owner = emberView._owner || emberView.container;
-        debug.steps.push(`owner from view: ${!!owner}`);
-        
-        if (owner && owner.lookup) {
-          routerService = owner.lookup('service:router');
-          router = router || owner.lookup('router:main');
-          debug.steps.push(`from owner - routerService: ${!!routerService}, router: ${!!router}`);
+      for (let i = 0; i < Math.min(allElements.length, 100); i++) {
+        const el = allElements[i] as any;
+        emberView = el.__ember_view__ || el.__EMBER_VIEW__;
+        if (emberView) {
+          owner = emberView._owner || emberView.container;
+          if (owner && owner.lookup) {
+            debug.steps.push(`found ember view on element ${i}: ${el.tagName}`);
+            break;
+          }
         }
+      }
+      
+      debug.steps.push(`ember view found: ${!!emberView}`);
+      debug.steps.push(`owner from view: ${!!owner}`);
+      
+      if (owner && owner.lookup) {
+        routerService = owner.lookup('service:router');
+        router = router || owner.lookup('router:main');
+        debug.steps.push(`from owner - routerService: ${!!routerService}, router: ${!!router}`);
       }
       
       // Extract route name
