@@ -9,3 +9,7 @@ export const TEMPLATE_MANIFEST_PATH =
 // Defaults to the value implied by your router import: 'travelbank/config/environment'.
 export const EMBER_MODULE_PREFIX =
   process.env.EMBER_MODULE_PREFIX ?? "travelbank";
+
+// If true, never try to read Ember at runtime. We resolve templates using URL + manifest only.
+export const EMBERLESS_MODE =
+  (process.env.EMBERLESS_MODE ?? "true").toLowerCase() === "true";

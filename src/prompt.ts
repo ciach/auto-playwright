@@ -11,12 +11,12 @@ export const prompt = (message: TaskMessage) => {
 
 Context for route→template mapping:
 - Current URL: ${message.snapshot.url ?? 'unknown'}
-- Current routeName: ${message.snapshot.routeName ?? 'unknown'}
+- Route name is intentionally unavailable. Use URL + candidates below.
 - Candidate templates (leaf-first):
 ${(message.snapshot.renderStack ?? []).map((p) => `  - ${p}` ).join('\n')}
 - Preferred template: ${message.snapshot.primaryTemplate ?? 'unknown'}
 
-When you need the related template, call resolveTemplateForCurrentPage() to confirm. Then call openTemplate() with the chosen path. Prefer the most specific candidate first. Only fall back to parent templates if the action clearly lives in the shell. If the action belongs to a shared component, return that component template instead.
+When you need the related template, call resolveTemplateForCurrentPage() (URL-based, emberless) to confirm. Then call openTemplate() with the chosen path. Prefer the top candidate unless the action is obviously in a parent shell. If a shared component owns the action, return that component template instead.
 
 * When creating selectors, follow this priority order:
   1. Use data-tag* attributes (e.g., [data-tag="submit-button"], [data-tag-id="user-profile"]) - HIGHEST PRIORITY

@@ -3,8 +3,9 @@ import { randomUUID } from "crypto";
 import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
 import { z } from "zod";
 import { getSanitizeOptions } from "./sanitizeHtml";
-import { EMBER_MODULE_PREFIX, TEMPLATE_MANIFEST_PATH } from "./config";
+import { TEMPLATE_MANIFEST_PATH } from "./config";
 import { existsSync, readFileSync } from "fs";
+import { resolveTemplatesForUrl } from "./resolveTemplates";
 import { ElementInteraction } from "./types";
 
 export const createActions = (
@@ -25,32 +26,8 @@ export const createActions = (
     return null;
   };
 
-  const deriveRenderStack = (routeName: string | null, manifest: Manifest | null) => {
-    if (!routeName) {
-      return { candidates: ["templates/application.hbs"], primary: null };
-    }
-    const parts = routeName.split(".");
-    const paths: string[] = [];
-    for (let i = parts.length; i > 0; i--) {
-      const seg = parts.slice(0, i).join("/");
-      paths.push(`templates/${seg}.hbs` );
-      paths.push(`templates/${seg}/index.hbs` );
-    }
-    paths.push("templates/application.hbs");
-    const unique = Array.from(new Set(paths));
-    const filtered = manifest
-      ? unique.filter((p) => manifest.entries.some((e) => e.path === p))
-      : unique;
-    let primary: string | null = null;
-    for (const p of filtered) {
-      if (!p.endsWith("/index.hbs")) {
-        primary = p;
-        break;
-      }
-    }
-    if (!primary && filtered.length) primary = filtered[0];
-    return { candidates: filtered, primary };
-  };
+  const resolveForUrl = (url: string, manifest: Manifest | null) =>
+    resolveTemplatesForUrl(url, manifest as any);
 
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
@@ -103,34 +80,17 @@ export const createActions = (
   };
 
   return {
-    // ---- Route/context helpers for the LLM ----
+    // ---- URL/context helper (emberless) ----
     getRouteContext: {
       function: async () => {
-        const info = await page.evaluate((modulePrefix: string) => {
-          try {
-            const req = (window as any).require || (window as any).requirejs;
-            const app = req && req(`${modulePrefix}/app` )?.default;
-            const container = app?.__container__;
-            const routerService = container?.lookup?.("service:router");
-            const router = container?.lookup?.("router:main");
-            const routeName =
-              (routerService && (routerService as any).currentRouteName) ||
-              (router && (router as any).currentRouteName) ||
-              null;
-            const currentURL =
-              (routerService && (routerService as any).currentURL) ||
-              (router && (router as any).currentURL) ||
-              window.location.pathname + window.location.search;
-            return { routeName, url: currentURL };
-          } catch {
-            return { routeName: null, url: window.location.href };
-          }
-        }, EMBER_MODULE_PREFIX);
-        return info;
+        const url = page.url();
+        const manifest = tryLoadManifest();
+        const res = resolveForUrl(url, manifest);
+        return { routeName: null, url, candidates: res.candidates, primaryTemplate: res.primary };
       },
       name: "getRouteContext",
       description:
-        "Returns the current Ember routeName and URL from inside the running app.",
+        "Returns the current page URL and a best-effort template guess. Does not touch Ember.",
       parse: (args: string) => {
         return z.object({}).parse(JSON.parse(args));
       },
@@ -142,38 +102,19 @@ export const createActions = (
 
     resolveTemplateForCurrentPage: {
       function: async () => {
-        const info = await page.evaluate((modulePrefix: string) => {
-          try {
-            const req = (window as any).require || (window as any).requirejs;
-            const app = req && req(`${modulePrefix}/app` )?.default;
-            const container = app?.__container__;
-            const routerService = container?.lookup?.("service:router");
-            const router = container?.lookup?.("router:main");
-            const routeName =
-              (routerService && (routerService as any).currentRouteName) ||
-              (router && (router as any).currentRouteName) ||
-              null;
-            const currentURL =
-              (routerService && (routerService as any).currentURL) ||
-              (router && (router as any).currentURL) ||
-              window.location.pathname + window.location.search;
-            return { routeName, url: currentURL };
-          } catch {
-            return { routeName: null, url: window.location.href };
-          }
-        }, EMBER_MODULE_PREFIX);
         const manifest = tryLoadManifest();
-        const stack = deriveRenderStack(info.routeName, manifest);
+        const url = page.url();
+        const stack = resolveForUrl(url, manifest);
         return {
-          routeName: info.routeName,
-          url: info.url,
+          routeName: null,
+          url,
           candidates: stack.candidates,
           primaryTemplate: stack.primary,
         };
       },
       name: "resolveTemplateForCurrentPage",
       description:
-        "Resolves the most specific HBS template file for the current page using routeName and an optional manifest.",
+        "Resolves the most specific HBS template file for the current page using only URL + template manifest.",
       parse: (args: string) => {
         return z.object({}).parse(JSON.parse(args));
       },

@@ -47,6 +47,7 @@ export type RouteContext = {
   queryParams?: Record<string, unknown>;
 };
 
+// Snapshot extended for emberless mapping
 export type Snapshot = {
   dom: string;
   url?: string;
