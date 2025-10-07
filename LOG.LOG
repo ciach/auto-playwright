@@ -7,10 +7,6 @@ Running 5 tests using 1 worker
   ✓  3 [setup] › tests/auth.setup.ts:8:9 › authenticate admin@automation.com user (1.9s)
   ✓  4 [setup] › tests/auth.setup.ts:8:9 › authenticate employee@automation.com user (1.5s)
      5 …y-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Employees link'
-AZURE_OPENAI_MODEL_NAME: gpt-4o
-AZURE_OPENAI_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjU0MzEzNTIsInVzZXJJZCI6IndrcmFzb3dza2kiLCJjb3N0Q2VudGVyIjoiVGVzdCBDYXNlcyBHZW5lcmF0b3IiLCJlbWFpbCI6IiIsInVzZXJuYW1lIjoiIn0.EGg6pU0WEXDVDvN7eUck6QJpSIaDmPkGGWFDu9BoD_I
-AZURE_OPENAI_API_ENDPOINT: http://100.78.22.77:18000/proxy
-openaiBaseUrl: http://100.78.22.77:18000/proxy/openai/deployments/gpt-4o
 > message {
   annotations: [],
   content: null,
