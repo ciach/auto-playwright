@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd ~/Nauka/web-app/app
+cd /Users/wxkraso/TravelBank/web-app/app
 
 # sanity checks
 test -d templates || { echo "No templates/ here. Run from the app root that contains templates/"; exit 1; }

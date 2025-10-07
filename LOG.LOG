@@ -1,0 +1,444 @@
+wxkraso@MS-TJMF9N6T3D tests-e2e % npx playwright test auto-departments-two.spec.ts --trace on --retries=0 --reporter=list
+
+Running 5 tests using 1 worker
+
+  ✓  1 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation.com users (27.5s)
+  ✓  2 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation-allocation.com users (4.9s)
+  ✓  3 [setup] › tests/auth.setup.ts:8:9 › authenticate admin@automation.com user (1.9s)
+  ✓  4 [setup] › tests/auth.setup.ts:8:9 › authenticate employee@automation.com user (1.5s)
+     5 …y-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Employees link'
+AZURE_OPENAI_MODEL_NAME: gpt-4o
+AZURE_OPENAI_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjU0MzEzNTIsInVzZXJJZCI6IndrcmFzb3dza2kiLCJjb3N0Q2VudGVyIjoiVGVzdCBDYXNlcyBHZW5lcmF0b3IiLCJlbWFpbCI6IiIsInVzZXJuYW1lIjoiIn0.EGg6pU0WEXDVDvN7eUck6QJpSIaDmPkGGWFDu9BoD_I
+AZURE_OPENAI_API_ENDPOINT: http://100.78.22.77:18000/proxy
+openaiBaseUrl: http://100.78.22.77:18000/proxy/openai/deployments/gpt-4o
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_KeneTPxm4oluoRLYiRUJRFNs',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_KeneTPxm4oluoRLYiRUJRFNs',
+  content: '{"elementId":"2db73d75-4c28-4fac-a76e-c2533ceea78e"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_1bA5Fd2zDUO5LUwVS9JM8GtN',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_1bA5Fd2zDUO5LUwVS9JM8GtN',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_n42ChoEpOMRvsWMJhvGFe2df',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_n42ChoEpOMRvsWMJhvGFe2df',
+  content: '{"routeName":null,"url":"/organizations/5f2b4fc18b85550012463331/employees","candidates":["templates/application.hbs"],"primaryTemplate":null}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_1s9gnWAo5pnyb1fBPeqbgVPF',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_1s9gnWAo5pnyb1fBPeqbgVPF',
+  content: '{"openFile":"templates/application.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+     5 …settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Departments link'
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_HWKyELZnVUwaxTqrTFxtnA6E',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_HWKyELZnVUwaxTqrTFxtnA6E',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'I successfully navigated to the "Employees" link and opened the associated template, `templates/application.hbs`. Let me know if you need further assistance!',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent I successfully navigated to the "Employees" link and opened the associated template, `templates/application.hbs`. Let me know if you need further assistance!
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T15:56:35.122Z",
+    "elementId": "2db73d75-4c28-4fac-a76e-c2533ceea78e",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "id": "ember287",
+        "class": "ember-view breadcrumb__link",
+        "href": "/organizations/5f2b4fc18b85550012463331/employees"
+      },
+      "outerHTML": "<a id=\"ember287\" class=\"ember-view breadcrumb__link\" href=\"/organizations/5f2b4fc18b85550012463331/employees\" data-element-id=\"2db73d75-4c28-4fac-a76e-c2533ceea78e\">\n                    Employees\n                  </a>",
+      "text": "Employees"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_2lAnD40RSNFNi0cswjEDKzbf',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_2lAnD40RSNFNi0cswjEDKzbf',
+  content: '{"elementId":"91b7dea6-f5a3-43d7-bb6b-8eb6febb860c"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_6FPzd5EDqgsqLtvO1CqLSIch',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_6FPzd5EDqgsqLtvO1CqLSIch',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_r4uFXOhxfpr7MSsTXTWNpGhG',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_r4uFXOhxfpr7MSsTXTWNpGhG',
+  content: '{"routeName":null,"url":"/organizations/5f2b4fc18b85550012463331/employees/departments","candidates":["templates/application.hbs"],"primaryTemplate":null}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_F02PUUW7gLsM79xLvKsvgrQK',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_F02PUUW7gLsM79xLvKsvgrQK',
+  content: '{"openFile":"templates/application.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+     5 …/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Click on Add Department button'
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_35VK53yUVmy7nL9h0ETVS6We',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_35VK53yUVmy7nL9h0ETVS6We',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Departments" link has been clicked successfully, and the associated template (`templates/application.hbs`) has been opened.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Departments" link has been clicked successfully, and the associated template (`templates/application.hbs`) has been opened.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T15:56:43.873Z",
+    "elementId": "91b7dea6-f5a3-43d7-bb6b-8eb6febb860c",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "href": "/organizations/5f2b4fc18b85550012463331/employees/departments",
+        "class": "nav-items__link ",
+        "aria-label": "Departments"
+      },
+      "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees/departments\" class=\"nav-items__link \" aria-label=\"Departments\" data-element-id=\"91b7dea6-f5a3-43d7-bb6b-8eb6febb860c\">\n  \n<!---->  <!---->\n  Departments\n  \n\n</a>",
+      "text": "Departments"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_tUSXao7w8CZiBOKtLjTEoSqM',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_tUSXao7w8CZiBOKtLjTEoSqM',
+  content: '{"elementId":"de67839c-5986-41fe-be9e-6532d20e7de0"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_2EqeGCzHExkxVRWpW9cHQWnm',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_2EqeGCzHExkxVRWpW9cHQWnm',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+     5 …s/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Fill in department name with WojtekTest'
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_KYKSuZ3BVtdLQifLwe3ssm7e',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_KYKSuZ3BVtdLQifLwe3ssm7e',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Add Department" button was successfully clicked.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Add Department" button was successfully clicked.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T15:57:35.782Z",
+    "elementId": "de67839c-5986-41fe-be9e-6532d20e7de0",
+    "element": {
+      "tag": "button",
+      "attributes": {
+        "id": "add_department",
+        "tabindex": "0",
+        "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+        "data-test-button": "add-department",
+        "type": "button"
+      },
+      "outerHTML": "<button id=\"add_department\" tabindex=\"0\" class=\"desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \" data-test-button=\"add-department\" type=\"button\" data-element-id=\"de67839c-5986-41fe-be9e-6532d20e7de0\">\n<!----><!---->  Add Department\n<!----></button>",
+      "text": "Add Department"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_9g7mBckb2zRi24mFc4xtcvdM',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_9g7mBckb2zRi24mFc4xtcvdM',
+  content: '{"elementId":"c07f726e-93c6-4fc8-85b3-572a581b11db"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_RLrjjOiIwmVIh17KlEPcTqo5',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_RLrjjOiIwmVIh17KlEPcTqo5',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  ✘  5 [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] (1.7m)
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_4jdIC6l85kLvdtVJXH6a5C8Y',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_4jdIC6l85kLvdtVJXH6a5C8Y',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The department name was successfully filled with "WojtekTest".',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The department name was successfully filled with "WojtekTest".
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_fill",
+    "timestamp": "2025-10-07T15:57:47.453Z",
+    "elementId": "c07f726e-93c6-4fc8-85b3-572a581b11db",
+    "element": {
+      "tag": "input",
+      "attributes": {
+        "id": "ember772__input",
+        "class": "ember-text-field ember-view tb-floating__input ",
+        "data-test-input": "input-name",
+        "type": "text"
+      },
+      "outerHTML": "<input id=\"ember772__input\" class=\"ember-text-field ember-view tb-floating__input \" data-test-input=\"input-name\" type=\"text\" data-element-id=\"c07f726e-93c6-4fc8-85b3-572a581b11db\">"
+    },
+    "actionData": {
+      "value": "WojtekTest"
+    }
+  }
+]
+
+
+  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
+
+    Test timeout of 100000ms exceeded.
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
+  4 passed (2.4m)
+wxkraso@MS-TJMF9N6T3D tests-e2e % 
