@@ -9,10 +9,13 @@ function tryLoadManifest(): Manifest | null {
   try {
     if (existsSync(TEMPLATE_MANIFEST_PATH)) {
       const data = JSON.parse(readFileSync(TEMPLATE_MANIFEST_PATH, "utf8"));
+      console.log(`[getSnapshot] Loaded manifest with ${data.entries?.length || 0} entries from ${TEMPLATE_MANIFEST_PATH}`);
       return data;
+    } else {
+      console.log(`[getSnapshot] Manifest file not found at ${TEMPLATE_MANIFEST_PATH}`);
     }
-  } catch {
-    // ignore
+  } catch (err) {
+    console.log(`[getSnapshot] Failed to load manifest:`, err);
   }
   return null;
 }
@@ -79,6 +82,7 @@ export const getSnapshot = async (page: Page) => {
 
   const manifest = tryLoadManifest();
   const stack = deriveRenderStack(route.routeName, manifest);
+  console.log(`[getSnapshot] routeName=${route.routeName}, candidates=${stack.candidates.length}, primary=${stack.primary}`);
 
   return {
     dom,
