@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import { mkdirSync, writeFileSync } from "fs";
+import * as path from "path";
 import { type Page, TaskMessage, TaskResult, ElementInteraction } from "./types";
 import { prompt, SYSTEM_PROMPT } from "./prompt";
 import { createActions } from "./createActions";
@@ -27,7 +29,21 @@ export const completeTask = async (
   const userPrompt = prompt(task);
 
   if (debug) {
-    console.log(`> snapshot.dom\n${task.snapshot.dom}`);
+    const debugDir = process.env.AUTO_PLAYWRIGHT_DEBUG_DIR ?? "var/llm";
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const filename = `snapshot-${timestamp}.html`;
+    const filePath = path.join(debugDir, filename);
+
+    try {
+      mkdirSync(debugDir, { recursive: true });
+      writeFileSync(filePath, task.snapshot.dom, "utf8");
+      console.log(`> snapshot.dom written to ${filePath}`);
+    } catch (error) {
+      console.warn(
+        `Failed to write snapshot DOM to ${filePath}: ${(error as Error).message}`,
+      );
+      console.log(`> snapshot.dom\n${task.snapshot.dom}`);
+    }
   }
 
   const runner = openai.beta.chat.completions
