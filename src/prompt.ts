@@ -9,6 +9,15 @@ import { TaskMessage } from "./types";
 export const prompt = (message: TaskMessage) => {
   return `This is your task: ${message.task}
 
+Context for route→template mapping:
+- Current URL: ${message.snapshot.url ?? 'unknown'}
+- Current routeName: ${message.snapshot.routeName ?? 'unknown'}
+- Candidate templates (leaf-first):
+${(message.snapshot.renderStack ?? []).map((p) => `  - ${p}` ).join('\n')}
+- Preferred template: ${message.snapshot.primaryTemplate ?? 'unknown'}
+
+When you need the related template, call resolveTemplateForCurrentPage() to confirm. Then call openTemplate() with the chosen path. Prefer the most specific candidate first. Only fall back to parent templates if the action clearly lives in the shell. If the action belongs to a shared component, return that component template instead.
+
 * When creating selectors, follow this priority order:
   1. Use data-tag* attributes (e.g., [data-tag="submit-button"], [data-tag-id="user-profile"]) - HIGHEST PRIORITY
   2. Use class attributes (e.g., .submit-btn, .user-card)
@@ -59,4 +68,11 @@ About getVisibleStructure:
 
 - You can use "getVisibleStructure" if you need a full overview of the page elements to make decisions or choose the right selector or text.
 
-If you skip locating an element first, your actions will fail. Always strictly follow this workflow.`;
+If you skip locating an element first, your actions will fail. Always strictly follow this workflow.
+
+Opening related Ember templates:
+
+- Use resolveTemplateForCurrentPage() to get routeName and candidate template paths.
+- Choose exactly one path, preferring the most specific leaf candidate.
+- Use openTemplate({ path }) to instruct the host to open that file.
+- Do not invent paths. If uncertain, return the nearest parent from the candidate list.`;
