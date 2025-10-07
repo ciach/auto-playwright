@@ -1,3 +1,5 @@
+export EMBER_MODULE_PREFIX="travelbank"
+
 [getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
 [getSnapshot] routeName=null, candidates=1, primary=null
 > message {
@@ -8,7 +10,7 @@
   tool_calls: [
     {
       function: [Object],
-      id: 'call_p9wccASObnAaovoDRh0MVoDC',
+      id: 'call_9D5WL4eCcHUtjystDlhK4xO6',
       type: 'function'
     }
   ],
@@ -16,90 +18,16 @@
 }
 > message {
   role: 'tool',
-  tool_call_id: 'call_p9wccASObnAaovoDRh0MVoDC',
-  content: '{"elementId":"b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"}'
-}
-> message {
-  annotations: [],
-  content: null,
-  refusal: null,
-  role: 'assistant',
-  tool_calls: [
-    {
-      function: [Object],
-      id: 'call_oUmtTNVReuIfzwQacolwGIyB',
-      type: 'function'
-    }
-  ],
-  parsed: null
-}
-Failed to log interaction for locator_click: locator.evaluate: Timeout 20000ms exceeded.
-Call log:
-  - waiting for locator('[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]')
-
-    at logInteraction (/Users/wxkraso/auto-playwright/dist/createActions.js:61:47)
-    at Object.function (/Users/wxkraso/auto-playwright/dist/createActions.js:627:23)
-    at ChatCompletionRunner._runTools (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/AbstractChatCompletionRunner.ts:470:45) {
-  name: 'TimeoutError',
-  [Symbol(step)]: {
-    stepId: 'pw:api@18',
-    location: {
-      file: '/Users/wxkraso/auto-playwright/dist/createActions.js',
-      line: 61,
-      column: 47,
-      function: 'logInteraction'
-    },
-    category: 'pw:api',
-  ✘  5 [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] (58.1s)
-    apiName: 'locator.evaluate',
-    params: {
-      selector: '[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]',
-      strict: true,
-      state: 'attached',
-      timeout: 20000
-    },
-    boxedStack: undefined,
-    steps: [],
-    attachmentIndices: [],
-    info: TestStepInfoImpl {
-      annotations: [],
-      _testInfo: [TestInfoImpl],
-      _stepId: 'pw:api@18'
-    },
-    complete: [Function: complete],
-    endWallTime: 1759853701283,
-    error: {
-      message: 'TimeoutError: locator.evaluate: Timeout 20000ms exceeded.\n' +
-        'Call log:\n' +
-        `\x1B[2m  - waiting for locator('[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]')\x1B[22m\n`,
-      stack: 'TimeoutError: locator.evaluate: Timeout 20000ms exceeded.\n' +
-        'Call log:\n' +
-        `\x1B[2m  - waiting for locator('[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]')\x1B[22m\n` +
-        '\n' +
-        '    at logInteraction (/Users/wxkraso/auto-playwright/dist/createActions.js:61:47)\n' +
-        '    at Object.function (/Users/wxkraso/auto-playwright/dist/createActions.js:627:23)\n' +
-        '    at ChatCompletionRunner._runTools (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/AbstractChatCompletionRunner.ts:470:45)',
-      cause: undefined
-    }
-  }
+  tool_call_id: 'call_9D5WL4eCcHUtjystDlhK4xO6',
+  content: '{"elementId":"91304e76-40f5-418a-8506-e71c62168b7a"}'
 }
 
 
-  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Employees link' 
+  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
 
-    Error: locator.click: Timeout 20000ms exceeded.
-    Call log:
-      - waiting for locator('[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]')
+    Test timeout of 100000ms exceeded.
 
-        at ChatCompletionRunner._EventStream_handleError (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/EventStream.ts:159:40)
-    [cause]: TimeoutError: locator.click: Timeout 20000ms exceeded.
-    Call log:
-      - waiting for locator('[data-element-id="b31eb5ec-2748-4761-a1e0-f3cd4ecb8987"]')
-
-        at Object.function (/Users/wxkraso/auto-playwright/dist/createActions.js:628:50)
-        at ChatCompletionRunner._runTools (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/AbstractChatCompletionRunner.ts:470:28)
-
-    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
     test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
     Usage:
 
@@ -109,4 +37,5 @@ Call log:
 
   1 failed
     [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
-  4 passed (1.7m)
+  4 passed (2.6m)
+wxkraso@MS-TJMF9N6T3D tests-e2e % 
