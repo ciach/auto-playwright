@@ -25,6 +25,8 @@ async function ensureDataTags(page: Page) {
       "data-cy-id",
     ];
 
+    const prefixPatterns = [/^data-test[\w-]*/, /^data-qa[\w-]*/, /^data-cy[\w-]*/, /^data-tag[\w-]*/];
+
     const toTokens = (value: string) =>
       value
         .split(/[\s,]+/)
@@ -36,8 +38,20 @@ async function ensureDataTags(page: Page) {
       if (!(element instanceof HTMLElement)) continue;
 
       const tokens = new Set<string>();
+
       for (const attribute of attributeCandidates) {
         const attrValue = element.getAttribute(attribute);
+        if (!attrValue) continue;
+        for (const token of toTokens(attrValue)) {
+          tokens.add(token);
+        }
+      }
+
+      const attributeNames = element.getAttributeNames?.() ?? [];
+      for (const attributeName of attributeNames) {
+        if (attributeName === "data-tags") continue;
+        if (!prefixPatterns.some((pattern) => pattern.test(attributeName))) continue;
+        const attrValue = element.getAttribute(attributeName);
         if (!attrValue) continue;
         for (const token of toTokens(attrValue)) {
           tokens.add(token);
