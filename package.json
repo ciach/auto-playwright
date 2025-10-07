@@ -16,14 +16,8 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://ray.run",
-  "keywords": [
-    "openai",
-    "playwright",
-    "test"
-  ],
   "peerDependencies": {
-    "@playwright/test": "^1.39.0"
+    "@playwright/test": "^1.52.0"
   },
   "release": {
     "branches": [
@@ -31,14 +25,14 @@
     ]
   },
   "name": "auto-playwright",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "version": "1.0.0",
+  "main": "dist/index.js",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+    ".": "./dist/index.js",
+    "./types": "./dist/types/index.d.ts",
+    "./dist": "./dist/index.js"
   },
+  "types": "dist/types/index.d.ts",
   "sideEffects": false,
   "description": "Automate Playwright tests using ChatGPT.",
   "repository": {
@@ -62,6 +56,5 @@
     "lint": "prettier --check ./src && knip",
     "semantic-release": "semantic-release",
     "test": "playwright test"
-  },
-  "version": "0.0.0-development"
+  }
 }
