@@ -3,12 +3,55 @@ import { randomUUID } from "crypto";
 import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
 import { z } from "zod";
 import { getSanitizeOptions } from "./sanitizeHtml";
+import { EMBER_MODULE_PREFIX, TEMPLATE_MANIFEST_PATH } from "./config";
+import { existsSync, readFileSync } from "fs";
 import { ElementInteraction } from "./types";
 
 export const createActions = (
   page: Page,
   interactionLog: ElementInteraction[] = [],
 ): Record<string, RunnableFunctionWithParse<any>> => {
+  // ---- Helpers for route/template resolution ----
+  type Manifest = { entries: { path: string }[] };
+  const tryLoadManifest = (): Manifest | null => {
+    try {
+      if (existsSync(TEMPLATE_MANIFEST_PATH)) {
+        const data = JSON.parse(readFileSync(TEMPLATE_MANIFEST_PATH, "utf8"));
+        return data;
+      }
+    } catch {
+      // ignore
+    }
+    return null;
+  };
+
+  const deriveRenderStack = (routeName: string | null, manifest: Manifest | null) => {
+    if (!routeName) {
+      return { candidates: ["templates/application.hbs"], primary: null };
+    }
+    const parts = routeName.split(".");
+    const paths: string[] = [];
+    for (let i = parts.length; i > 0; i--) {
+      const seg = parts.slice(0, i).join("/");
+      paths.push(`templates/${seg}.hbs` );
+      paths.push(`templates/${seg}/index.hbs` );
+    }
+    paths.push("templates/application.hbs");
+    const unique = Array.from(new Set(paths));
+    const filtered = manifest
+      ? unique.filter((p) => manifest.entries.some((e) => e.path === p))
+      : unique;
+    let primary: string | null = null;
+    for (const p of filtered) {
+      if (!p.endsWith("/index.hbs")) {
+        primary = p;
+        break;
+      }
+    }
+    if (!primary && filtered.length) primary = filtered[0];
+    return { candidates: filtered, primary };
+  };
+
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
   };
@@ -60,6 +103,82 @@ export const createActions = (
   };
 
   return {
+    // ---- Route/context helpers for the LLM ----
+    getRouteContext: {
+      description:
+        "Returns the current Ember routeName and URL from inside the running app.",
+      parameters: z.object({}),
+      function: async () => {
+        const info = await page.evaluate((modulePrefix: string) => {
+          try {
+            const req = (window as any).require || (window as any).requirejs;
+            const app = req && req(`${modulePrefix}/app` )?.default;
+            const container = app?.__container__;
+            const routerService = container?.lookup?.("service:router");
+            const router = container?.lookup?.("router:main");
+            const routeName =
+              (routerService && (routerService as any).currentRouteName) ||
+              (router && (router as any).currentRouteName) ||
+              null;
+            const currentURL =
+              (routerService && (routerService as any).currentURL) ||
+              (router && (router as any).currentURL) ||
+              window.location.pathname + window.location.search;
+            return { routeName, url: currentURL };
+          } catch {
+            return { routeName: null, url: window.location.href };
+          }
+        }, EMBER_MODULE_PREFIX);
+        return info;
+      },
+    },
+
+    resolveTemplateForCurrentPage: {
+      description:
+        "Resolves the most specific HBS template file for the current page using routeName and an optional manifest.",
+      parameters: z.object({}),
+      function: async () => {
+        const info = await page.evaluate((modulePrefix: string) => {
+          try {
+            const req = (window as any).require || (window as any).requirejs;
+            const app = req && req(`${modulePrefix}/app` )?.default;
+            const container = app?.__container__;
+            const routerService = container?.lookup?.("service:router");
+            const router = container?.lookup?.("router:main");
+            const routeName =
+              (routerService && (routerService as any).currentRouteName) ||
+              (router && (router as any).currentRouteName) ||
+              null;
+            const currentURL =
+              (routerService && (routerService as any).currentURL) ||
+              (router && (router as any).currentURL) ||
+              window.location.pathname + window.location.search;
+            return { routeName, url: currentURL };
+          } catch {
+            return { routeName: null, url: window.location.href };
+          }
+        }, EMBER_MODULE_PREFIX);
+        const manifest = tryLoadManifest();
+        const stack = deriveRenderStack(info.routeName, manifest);
+        return {
+          routeName: info.routeName,
+          url: info.url,
+          candidates: stack.candidates,
+          primaryTemplate: stack.primary,
+        };
+      },
+    },
+
+    openTemplate: {
+      description:
+        "Return a directive to open the given template path in the editor or host environment.",
+      parameters: z.object({ path: z.string() }),
+      function: async ({ path }: { path: string }) => {
+        // Nothing to do inside the browser; return an instruction for the host.
+        return { openFile: path };
+      },
+    },
+
     locator_pressKey: {
       function: async (args: { elementId: string; key: string }) => {
         const { elementId, key } = args;

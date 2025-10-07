@@ -15,9 +15,7 @@ export type StepOptions = {
 
 export type TaskMessage = {
   task: string;
-  snapshot: {
-    dom: string;
-  };
+  snapshot: Snapshot;
   options?: StepOptions;
 };
 
@@ -40,4 +38,31 @@ export type TaskResult = {
   query?: string;
   errorMessage?: string;
   interactions?: ElementInteraction[];
+};
+
+// ---- New types for route/template resolution ----
+export type RouteContext = {
+  url: string;
+  routeName: string | null;
+  queryParams?: Record<string, unknown>;
+};
+
+export type Snapshot = {
+  dom: string;
+  url?: string;
+  routeName?: string | null;
+  renderStack?: string[];
+  primaryTemplate?: string | null;
+};
+
+export type TemplateManifestEntry = {
+  path: string; // e.g. 'templates/user/login.hbs' or 'templates/components/x.hbs'
+  routeName?: string; // for route templates; omit for components
+  kind: "route" | "component" | "substate";
+  tags?: string[]; // extracted texts or data-test attrs
+  components?: string[]; // referenced component names
+};
+
+export type TemplateManifest = {
+  entries: TemplateManifestEntry[];
 };
