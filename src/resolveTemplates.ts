@@ -16,6 +16,13 @@ function pathToSegments(p: string): string[] {
   return toSegments(body);
 }
 
+function lastRealSeg(segs: string[]): string {
+  if (!segs.length) return "";
+  const last = segs[segs.length - 1];
+  if (last === "index" && segs.length >= 2) return segs[segs.length - 2];
+  return last;
+}
+
 function isIdLike(seg: string) {
   return /^\d+$/.test(seg) || /^[0-9a-f-]{6,}$/.test(seg);
 }
@@ -76,6 +83,12 @@ export function resolveTemplatesForUrl(
     if (segs.includes("search") && urlSegs.includes("search")) score += 3;
     if (segs.includes("edit") && urlSegs.includes("edit")) score += 3;
     if (segs.includes("create") && urlSegs.includes("new")) score += 2;
+    // Strongly favor exact tail match (ignoring 'index')
+    const tmplTail = lastRealSeg(segs);
+    if (tmplTail && tmplTail === urlLast) score += 8;
+    // Penalize templates that go deeper than the URL path
+    const extra = Math.max(0, segs.length - urlSegs.length);
+    if (extra > 0) score -= extra * 2;
     return { path: e.path, score, depth: segs.length };
   });
 
