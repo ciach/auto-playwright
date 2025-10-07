@@ -24,6 +24,12 @@ export const completeTask = async (
 
   const debug = task.options?.debug ?? defaultDebug;
 
+  const userPrompt = prompt(task);
+
+  if (debug) {
+    console.log(`> snapshot.dom\n${task.snapshot.dom}`);
+  }
+
   const runner = openai.beta.chat.completions
     .runTools({
       model: task.options?.model ?? "gpt-4o",
@@ -32,7 +38,7 @@ export const completeTask = async (
           role: "system",
           content: SYSTEM_PROMPT,
         },
-        { role: "user", content: prompt(task) },
+        { role: "user", content: userPrompt },
       ],
       tools: Object.values(actions).map((action) => ({
         type: "function",
