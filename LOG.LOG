@@ -1,7 +1,15 @@
-export EMBER_MODULE_PREFIX="travelbank"
-
 [getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
 [getSnapshot] routeName=null, candidates=1, primary=null
+[getSnapshot] debug: {
+  "steps": [
+    "require exists: true",
+    "app loaded: true",
+    "container exists: false",
+    "routerService exists: false",
+    "router exists: false",
+    "routeName: null"
+  ]
+}
 > message {
   annotations: [],
   content: null,
@@ -10,7 +18,7 @@ export EMBER_MODULE_PREFIX="travelbank"
   tool_calls: [
     {
       function: [Object],
-      id: 'call_9D5WL4eCcHUtjystDlhK4xO6',
+      id: 'call_uQ9jBZ4qNpv4HbkCqlRt4XSe',
       type: 'function'
     }
   ],
@@ -18,8 +26,506 @@ export EMBER_MODULE_PREFIX="travelbank"
 }
 > message {
   role: 'tool',
-  tool_call_id: 'call_9D5WL4eCcHUtjystDlhK4xO6',
-  content: '{"elementId":"91304e76-40f5-418a-8506-e71c62168b7a"}'
+  tool_call_id: 'call_uQ9jBZ4qNpv4HbkCqlRt4XSe',
+  content: '{"elementId":"586b8bc7-d3c5-43c8-909e-aaa965e05034"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_00h9nPtgMlOECuvguhq37Lfa',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_00h9nPtgMlOECuvguhq37Lfa',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_LZfDiprnOFRVVViBZRXXj4iB',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_LZfDiprnOFRVVViBZRXXj4iB',
+  content: '{"routeName":null,"url":"/organizations/5f2b4fc18b85550012463331/employees","candidates":["templates/application.hbs"],"primaryTemplate":null}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_fZdVdvzjvqK1xKswIJZFvebM',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_fZdVdvzjvqK1xKswIJZFvebM',
+  content: '{"openFile":"templates/application.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+     5 …settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Departments link'
+    {
+      function: [Object],
+      id: 'call_Bt37MvcIK1Z1ncee1gbuuyEp',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_Bt37MvcIK1Z1ncee1gbuuyEp',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Employees" link has been clicked successfully, and the related "templates/application.hbs" file has been opened as the necessary route handler template. Let me know if you need any further assistance!',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Employees" link has been clicked successfully, and the related "templates/application.hbs" file has been opened as the necessary route handler template. Let me know if you need any further assistance!
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T16:40:14.838Z",
+    "elementId": "586b8bc7-d3c5-43c8-909e-aaa965e05034",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "id": "ember287",
+        "class": "ember-view breadcrumb__link",
+        "href": "/organizations/5f2b4fc18b85550012463331/employees"
+      },
+      "outerHTML": "<a id=\"ember287\" class=\"ember-view breadcrumb__link\" href=\"/organizations/5f2b4fc18b85550012463331/employees\" data-element-id=\"586b8bc7-d3c5-43c8-909e-aaa965e05034\">\n                    Employees\n                  </a>",
+      "text": "Employees"
+    }
+  }
+]
+[getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
+[getSnapshot] routeName=null, candidates=1, primary=null
+[getSnapshot] debug: {
+  "steps": [
+    "require exists: true",
+    "app loaded: true",
+    "container exists: false",
+    "routerService exists: false",
+    "router exists: false",
+    "routeName: null"
+  ]
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_mB2uNcDx78GhQmEQM9opo0N4',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_mB2uNcDx78GhQmEQM9opo0N4',
+  content: '{"elementId":"4c45c296-f698-485c-8737-b75fdaea87f8"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_JSmgQ6jFgNx1im09PssWBzQd',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_JSmgQ6jFgNx1im09PssWBzQd',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+     5 …/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Click on Add Department button'
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_9ex4OS2GNiC7SHqy1n4YP7cs',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_9ex4OS2GNiC7SHqy1n4YP7cs',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The task to navigate to the "Departments" link has been successfully completed.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The task to navigate to the "Departments" link has been successfully completed.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T16:40:23.789Z",
+    "elementId": "4c45c296-f698-485c-8737-b75fdaea87f8",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "href": "/organizations/5f2b4fc18b85550012463331/employees/departments",
+        "class": "nav-items__link ",
+        "aria-label": "Departments"
+      },
+      "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees/departments\" class=\"nav-items__link \" aria-label=\"Departments\" data-element-id=\"4c45c296-f698-485c-8737-b75fdaea87f8\">\n  \n<!---->  <!---->\n  Departments\n  \n\n</a>",
+      "text": "Departments"
+    }
+  }
+]
+[getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
+[getSnapshot] routeName=null, candidates=1, primary=null
+[getSnapshot] debug: {
+  "steps": [
+    "require exists: true",
+    "app loaded: true",
+    "container exists: false",
+    "routerService exists: false",
+    "router exists: false",
+    "routeName: null"
+  ]
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_IvnKFsS9HAvqkvpu6yZ0UASR',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_IvnKFsS9HAvqkvpu6yZ0UASR',
+  content: '{"elementId":"becd2efb-8a98-47ed-a6a9-73003b7e6c77"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_ftClt7y0KD0hJaurEnBYoOgp',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_ftClt7y0KD0hJaurEnBYoOgp',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+     5 …s/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Fill in department name with WojtekTest'
+      function: [Object],
+      id: 'call_UFBct9qnyXDkfU2OQAQXIsUJ',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_UFBct9qnyXDkfU2OQAQXIsUJ',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Add Department" button was successfully clicked.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Add Department" button was successfully clicked.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T16:40:29.621Z",
+    "elementId": "becd2efb-8a98-47ed-a6a9-73003b7e6c77",
+    "element": {
+      "tag": "button",
+      "attributes": {
+        "id": "add_department",
+        "tabindex": "0",
+        "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+        "data-test-button": "add-department",
+        "type": "button"
+      },
+      "outerHTML": "<button id=\"add_department\" tabindex=\"0\" class=\"desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \" data-test-button=\"add-department\" type=\"button\" data-element-id=\"becd2efb-8a98-47ed-a6a9-73003b7e6c77\">\n<!----><!---->  Add Department\n<!----></button>",
+      "text": "Add Department"
+    }
+  }
+]
+[getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
+[getSnapshot] routeName=null, candidates=1, primary=null
+[getSnapshot] debug: {
+  "steps": [
+    "require exists: true",
+    "app loaded: true",
+    "container exists: false",
+    "routerService exists: false",
+    "router exists: false",
+    "routeName: null"
+  ]
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_L1ZYbNpNdR13zElGsHQNKpra',
+      type: 'function'
+    },
+    {
+      function: [Object],
+      id: 'call_ixYS8fyLCdhclJNxg9QIrssK',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_L1ZYbNpNdR13zElGsHQNKpra',
+  content: '{"elementId":"8c88b594-9cb9-4b2f-b079-5168f2ca36ed"}'
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_ixYS8fyLCdhclJNxg9QIrssK',
+  content: '{"elementId":"64bad562-2b73-45bb-aa33-d3c0364cf474"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_H44xMwu8zznsiwvQr8iye6ed',
+      type: 'function'
+    },
+    {
+      function: [Object],
+      id: 'call_DlTOSN8Tbep5YPjvLFkABAfO',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_H44xMwu8zznsiwvQr8iye6ed',
+  content: '{"success":true}'
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_DlTOSN8Tbep5YPjvLFkABAfO',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_7rauPDezH6ak7OjL5ml4hFvP',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_7rauPDezH6ak7OjL5ml4hFvP',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The department name has been successfully filled with "WojtekTest" and saved.',
+  refusal: null,
+  role: 'assistant',
+     5 …y-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Click on Save button'
+}
+> finalContent The department name has been successfully filled with "WojtekTest" and saved.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_fill",
+    "timestamp": "2025-10-07T16:41:21.001Z",
+    "elementId": "8c88b594-9cb9-4b2f-b079-5168f2ca36ed",
+    "element": {
+      "tag": "input",
+      "attributes": {
+        "id": "ember500__input",
+        "class": "ember-text-field ember-view tb-floating__input ",
+        "data-test-input": "input-name",
+        "type": "text"
+      },
+      "outerHTML": "<input id=\"ember500__input\" class=\"ember-text-field ember-view tb-floating__input \" data-test-input=\"input-name\" type=\"text\" data-element-id=\"8c88b594-9cb9-4b2f-b079-5168f2ca36ed\">"
+    },
+    "actionData": {
+      "value": "WojtekTest"
+    }
+  },
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T16:41:21.038Z",
+    "elementId": "64bad562-2b73-45bb-aa33-d3c0364cf474",
+    "element": {
+      "tag": "button",
+      "attributes": {
+        "tabindex": "0",
+        "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+        "data-test-button": "save-department",
+        "type": "button"
+      },
+      "outerHTML": "<button tabindex=\"0\" class=\"desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \" data-test-button=\"save-department\" type=\"button\" data-element-id=\"64bad562-2b73-45bb-aa33-d3c0364cf474\">\n<!----><!---->  Save\n<!----></button>",
+      "text": "Save"
+    }
+  }
+]
+[getSnapshot] Loaded manifest with 191 entries from /Users/wxkraso/TravelBank/web-app/app/var/llm/template-manifest.json
+[getSnapshot] routeName=null, candidates=1, primary=null
+[getSnapshot] debug: {
+  "steps": [
+    "require exists: true",
+    "app loaded: true",
+    "container exists: false",
+    "routerService exists: false",
+    "router exists: false",
+    "routeName: null"
+  ]
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_6Qzr9vFXHKUZRA2u5nmDNmlS',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_6Qzr9vFXHKUZRA2u5nmDNmlS',
+  content: `{"structure":{"tag":"body","attributes":{"class":"ember-application logged-in not-showing-globals organizations organizations-organization organizations-organization-employees showing-navigation with-global-navigation with-sub-navigation organizations-organization-employees-departments organizations-organization-employees-departments-index"},"children":[{"tag":"div","attributes":{"id":"overlay-container"},"children":[],"id":"overlay-container"},{"tag":"div","attributes":{"id":"ember-basic-dropdown-wormhole"},"children":[],"id":"ember-basic-dropdown-wormhole"},{"tag":"div","attributes":{"id":"modal-overlays"},"children":[],"id":"modal-overlays"},{"tag":"div","attributes":{"class":"main-app-container ","aria-hidden":"false"},"children":[{"tag":"div","attributes":{"id":"build-number"},"children":[],"id":"build-number"},{"tag":"div","attributes":{"class":"notifications has-messages","role":"alert","aria-live":"assertive"},"children":[{"tag":"div","attributes":{"class":"notifications__message\\n            error\\n            notifications__message_active\\n            "},"children":[{"tag":"span","attributes":{"class":"notifications__icon notifications__icon_error icon-toast-exclamation"},"children":[],"className":"notifications__icon notifications__icon_error icon-toast-exclamation"},{"tag":"span","attributes":{"class":"notifications__text"},"children":[],"className":"notifications__text","text":"The 'WojtekTest' department already exists. Please..."}],"className":"notifications__message\\n            error\\n            notifications__message_active"}],"role":"alert","className":"notifications has-messages"},{"tag":"div","attributes":{"class":"jump-to-main "},"children":[{"tag":"button","attributes":{"tabindex":"0"},"children":[],"text":"Skip to Main Content"}],"className":"jump-to-main"},{"tag":"div","attributes":{"id":"ember265","class":"global-header-container liquid-container ember-view","style":""},"children":[{"tag":"div","attributes":{"id":"ember271","class":"liquid-child ember-view","style":"top: 26px; left: 0px;"},"children":[{"tag":"div","attributes":{"id":"globalheader","class":"global-header__content global-header-container"},"children":[{"tag":"div","attributes":{"class":"global-header__logo","data-test-logo":"header-logo","role":"presentation"},"children":[{"tag":"div","attributes":{"id":"ember278","class":"logo-container ember-view agency-logo"},"children":[],"id":"ember278","className":"logo-container ember-view agency-logo"}],"role":"presentation","className":"global-header__logo"},{"tag":"div","attributes":{"class":"breadcrumb-button-group"},"children":[{"tag":"div","attributes":{"data-test-breadcrumb":"breadcrumb"},"children":[{"tag":"ol","attributes":{"class":"cols_6 breadcrumb","aria-label":"Breadcrumbs"},"children":[{"tag":"li","attributes":{"class":"breadcrumb__item","aria-label":"Company Settings"},"children":[{"tag":"a","attributes":{"id":"ember462","class":"ember-view active breadcrumb__link","href":"/organizations/5f2b4fc18b85550012463331"},"children":[],"id":"ember462","className":"ember-view active breadcrumb__link"}],"ariaLabel":"Company Settings","className":"breadcrumb__item"},{"tag":"li","attributes":{"class":"breadcrumb__item__chevron","aria-hidden":"true"},"children":[],"className":"breadcrumb__item__chevron"},{"tag":"li","attributes":{"class":"breadcrumb__item","aria-label":"Employees"},"children":[{"tag":"a","attributes":{"id":"ember463","class":"ember-view breadcrumb__link","href":"/organizations/5f2b4fc18b85550012463331/employees"},"children":[],"id":"ember463","className":"ember-view breadcrumb__link"}],"ariaLabel":"Employees","className":"breadcrumb__item"},{"tag":"li","attributes":{"class":"breadcrumb__item__chevron","aria-hidden":"true"},"children":[],"className":"breadcrumb__item__chevron"},{"tag":"li","attributes":{"class":"breadcrumb__item","aria-label":"Departments"},"children":[{"tag":"a","attributes":{"class":"breadcrumb__link-disabled","tabindex":"-1"},"children":[],"className":"breadcrumb__link-disabled"}],"ariaLabel":"Departments","className":"breadcrumb__item"}],"ariaLabel":"Breadcrumbs","className":"cols_6 breadcrumb"}]}],"className":"breadcrumb-button-group"},{"tag":"div","attributes":{"class":"button-group"},"children":[{"tag":"div","attributes":{"class":"language-selector"},"children":[{"tag":"div","attributes":{"data-test-dropdown":"site-language","id":"ember296","class":"tb-floating-wrapper tb-dropdown has-value ember-view"},"children":[{"tag":"div","attributes":{"class":"ember-view ember-basic-dropdown-trigger\\n      \\n      \\n      \\n       ember-power-select-trigger tb-floating__input ","role":"button","tabindex":"0","data-ebd-id":"ember298-trigger","aria-owns":"","aria-controls":"ember-power-select-options-ember298","aria-expanded":"false","aria-haspopup":"listbox","aria-label":"dropdown list"},"children":[{"tag":"span","attributes":{"class":"ember-power-select-selected-item"},"children":[{"tag":"div","attributes":{"class":"language-selector__option"},"children":[{"tag":"img","attributes":{"class":"language-selector__option__flag","tabindex":"-1","aria-hidden":"true","src":"/assets/images/flags/US-8bc28cc910717eaf1a0adcee4b3b2dbd.svg","alt":"US flag"},"children":[],"className":"language-selector__option__flag"},{"tag":"span","attributes":{},"children":[],"text":"English (US)"}],"className":"language-selector__option"}],"className":"ember-power-select-selected-item"},{"tag":"span","attributes":{"class":"ember-power-select-status-icon","aria-hidden":"true","tabindex":"-1"},"children":[],"className":"ember-power-select-status-icon"}],"role":"button","ariaLabel":"dropdown list","className":"ember-view ember-basic-dropdown-trigger\\n      \\n      \\n      \\n       ember-power-select-trigger tb-floating__input"},{"tag":"div","attributes":{"id":"ember-basic-dropdown-content-ember298","class":"ember-basic-dropdown-content-placeholder"},"children":[],"id":"ember-basic-dropdown-content-ember298","className":"ember-basic-dropdown-content-placeholder"}],"id":"ember296","className":"tb-floating-wrapper tb-dropdown has-value ember-view"}],"className":"language-selector"},{"tag":"div","attributes":{},"children":[{"tag":"div","attributes":{"class":"notification-count","data-test-notification-count":"notification-count","aria-hidden":"true","tabindex":"-1"},"children":[],"className":"notification-count"},{"tag":"button","attributes":{"class":"tb-button-icon ember-tooltip-target","id":"notification-center-id","tabindex":"0","data-test-button":"notification-icon","aria-label":"Notifications","type":"button"},"children":[{"tag":"div","attributes":{"class":"icon-background "},"children":[{"tag":"div","attributes":{"class":"button-icon ","style":" -webkit-mask-image: url('/assets/images/global-header/bell-450c02a4b044c283102ea4ee0a6ce81b.svg');\\n     mask-image: url('/assets/images/global-header/bell-450c02a4b044c283102ea4ee0a6ce81b.svg');\\n     "},"children":[],"className":"button-icon"}],"className":"icon-background"}],"id":"notification-center-id","ariaLabel":"Notifications","className":"tb-button-icon ember-tooltip-target"}]},{"tag":"button","attributes":{"class":"tb-button-icon ember-tooltip-target","id":"help-support","tabindex":"0","data-test-button":"help-support-icon","aria-label":"Help & Support","type":"button"},"children":[{"tag":"div","attributes":{"class":"icon-background "},"children":[{"tag":"div","attributes":{"class":"button-icon ","style":" -webkit-mask-image: url('/assets/images/global-header/question-circle-2d73faf18d4da1af9699d6a866659dff.svg');\\n     mask-image: url('/assets/images/global-header/question-circle-2d73faf18d4da1af9699d6a866659dff.svg');\\n     "},"children":[],"className":"button-icon"}],"className":"icon-background"}],"id":"help-support","ariaLabel":"Help & Support","className":"tb-button-icon ember-tooltip-target"},{"tag":"button","attributes":{"id":"my-account-id","data-test-user-icon":"user-icon","aria-label":"My Account","class":"ember-tooltip-target"},"children":[{"tag":"div","attributes":{"class":"avatar\\n    \\n    "},"children":[{"tag":"img","attributes":{"src":"https://travelbank-staging-storage-east-users-avatar.imgix.net/682f4828777c3de27a773620.jpg?w=180&h=180&fit=crop&v=1747929128701&s=3bddff8b70e5f0e8503fb04ee1b3b666","width":"120","height":"120","class":"avatar__image","alt":"Admin Automation"},"children":[],"className":"avatar__image"}],"className":"avatar"}],"id":"my-account-id","ariaLabel":"My Account","className":"ember-tooltip-target"}],"className":"button-group"}],"id":"globalheader","className":"global-header__content global-header-container"}],"id":"ember271","className":"liquid-child ember-view"}],"id":"ember265","className":"global-header-container liquid-container ember-view"},{"tag":"div","attributes":{"id":"ember305","class":"global-navigation-container with-top-nav-bar liquid-container ember-view","style":""},"children":[{"tag":"div","attributes":{"id":"ember307","class":"liquid-child ember-view","style":"top: 0px; left: 0px;"},"children":[{"tag":"nav","attributes":{"id":"ember310","class":"global-navigation ember-view"},"children":[{"tag":"div","attributes":{"id":"nav","class":"global-navigation__content\\n    with-layout-updates"},"children":[{"tag":"div","attributes":{"id":"main_nav_items","class":"global-navigation__item-container"},"children":[{"tag":"div","attributes":{"class":"global-navigation__item\\n          dashboard"},"children":[{"tag":"a","attributes":{"href":"/dashboard","class":"global-navigation
+  ✘  5 [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] (1.7m)i","attributes":{"class":"icon-dashboard"},"children":[],"className":"icon-dashboard"}],"className":"global-navigation__link__label"}],"className":"global-navigation__link"}],"className":"global-navigation__item\\n          dashboard"},{"tag":"div","attributes":{"class":"global-navigation__item-container","data-test-main-nav-items":""},"children":[{"tag":"div","attributes`... 31507 more characters
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_Jiu1XjdkoB3Ku48qCmdmLhir',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_Jiu1XjdkoB3Ku48qCmdmLhir',
+  content: '{"elementId":"e7e5ec35-f637-4024-a4a1-3630f6da7494"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_aR4w1rXxpLlLcMGDwylYdNPP',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_aR4w1rXxpLlLcMGDwylYdNPP',
+  content: '{"success":true}'
 }
 
 
@@ -37,5 +543,5 @@ export EMBER_MODULE_PREFIX="travelbank"
 
   1 failed
     [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
-  4 passed (2.6m)
+  4 passed (2.4m)
 wxkraso@MS-TJMF9N6T3D tests-e2e % 
