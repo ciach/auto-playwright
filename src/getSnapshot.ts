@@ -61,78 +61,47 @@ export const getSnapshot = async (page: Page) => {
         return { routeName: null, currentURL: window.location.href, queryParams: {}, debug };
       }
       
-      const appModule = req(`${modulePrefix}/app`);
-      debug.steps.push(`app module loaded: ${!!appModule}`);
+      // Try to load router directly from require
+      let routerService, router, routeName = null;
       
-      if (!appModule) {
-        debug.error = `Could not load ${modulePrefix}/app`;
-        return { routeName: null, currentURL: window.location.href, queryParams: {}, debug };
+      try {
+        routerService = req(`${modulePrefix}/services/router`)?.default;
+        debug.steps.push(`loaded service:router module: ${!!routerService}`);
+      } catch (e) {
+        debug.steps.push(`failed to load service:router module`);
       }
       
-      const app = appModule.default || appModule;
-      debug.steps.push(`app instance: ${!!app}`);
+      try {
+        router = req(`${modulePrefix}/router`)?.default;
+        debug.steps.push(`loaded router module: ${!!router}`);
+      } catch (e) {
+        debug.steps.push(`failed to load router module`);
+      }
       
-      // Try multiple ways to get the container
-      const container = app.__container__ || 
-                       app.__deprecatedInstance__?.__container__ ||
-                       (window as any).Ember?.getOwner?.(app);
-      debug.steps.push(`container exists: ${!!container}`);
+      // Try to find router instance in DOM
+      const rootElement = document.querySelector('[data-ember-extension]') || 
+                         document.querySelector('.ember-application') ||
+                         document.body;
+      debug.steps.push(`root element found: ${!!rootElement}`);
       
-      if (!container) {
-        // Try to get container from a running Ember app instance
-        const emberApp = (window as any)[modulePrefix];
-        debug.steps.push(`window.${modulePrefix} exists: ${!!emberApp}`);
+      // Try to get router from element's Ember view
+      const emberView = (rootElement as any)?.__ember_view__ || 
+                       (rootElement as any)?.__EMBER_VIEW__;
+      debug.steps.push(`ember view on root: ${!!emberView}`);
+      
+      if (emberView) {
+        const owner = emberView._owner || emberView.container;
+        debug.steps.push(`owner from view: ${!!owner}`);
         
-        const altContainer = emberApp?.__container__ || 
-                            emberApp?.__deprecatedInstance__?.__container__;
-        debug.steps.push(`alt container from window.${modulePrefix}: ${!!altContainer}`);
-        
-        // Try to find container in window.Ember namespace
-        const EmberNS = (window as any).Ember;
-        debug.steps.push(`window.Ember exists: ${!!EmberNS}`);
-        
-        // Try to get application instance from Ember namespace
-        const appInstance = EmberNS?.Application?.NAMESPACES?.find?.((ns: any) => 
-          ns.name === modulePrefix || ns.modulePrefix === modulePrefix
-        );
-        debug.steps.push(`Ember.Application.NAMESPACES app: ${!!appInstance}`);
-        
-        const nsContainer = appInstance?.__container__ || appInstance?.__deprecatedInstance__?.__container__;
-        debug.steps.push(`namespace container: ${!!nsContainer}`);
-        
-        const finalContainer = altContainer || nsContainer;
-        
-        if (finalContainer) {
-          const routerService = finalContainer?.lookup?.("service:router");
-          const router = finalContainer?.lookup?.("router:main");
-          debug.steps.push(`using alt container - routerService: ${!!routerService}, router: ${!!router}`);
-          const routeName =
-            (routerService && (routerService as any).currentRouteName) ||
-            (router && (router as any).currentRouteName) ||
-            null;
-          debug.steps.push(`routeName: ${routeName}`);
-          const currentURL =
-            (routerService && (routerService as any).currentURL) ||
-            (router && (router as any).currentURL) ||
-            window.location.pathname + window.location.search;
-          const qp =
-            (routerService &&
-              typeof (routerService as any).currentRoute === "object" &&
-              ((routerService as any).currentRoute as any).queryParams) ||
-            {};
-          return { routeName, currentURL, queryParams: qp, debug };
+        if (owner && owner.lookup) {
+          routerService = owner.lookup('service:router');
+          router = router || owner.lookup('router:main');
+          debug.steps.push(`from owner - routerService: ${!!routerService}, router: ${!!router}`);
         }
-        debug.error = 'Could not find container';
-        return { routeName: null, currentURL: window.location.href, queryParams: {}, debug };
       }
       
-      const routerService = container?.lookup?.("service:router");
-      debug.steps.push(`routerService exists: ${!!routerService}`);
-      
-      const router = container?.lookup?.("router:main");
-      debug.steps.push(`router exists: ${!!router}`);
-      
-      const routeName =
+      // Extract route name
+      routeName =
         (routerService && (routerService as any).currentRouteName) ||
         (router && (router as any).currentRouteName) ||
         null;
