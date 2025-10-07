@@ -495,3 +495,441 @@
   1 failed
     [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
   4 passed (2.3m)
+wxkraso@MS-TJMF9N6T3D tests-e2e % npm install /Users/wxkraso/auto-playwright                                             
+
+up to date, audited 62 packages in 2s
+
+9 packages are looking for funding
+  run `npm fund` for details
+
+1 critical severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+wxkraso@MS-TJMF9N6T3D tests-e2e % npx playwright test auto-departments-two.spec.ts --trace on --retries=0 --reporter=list
+
+Running 5 tests using 1 worker
+
+  ✓  1 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation.com users (38.4s)
+  ✓  2 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation-allocation.com users (8.2s)
+  ✓  3 [setup] › tests/auth.setup.ts:8:9 › authenticate admin@automation.com user (1.9s)
+  ✓  4 [setup] › tests/auth.setup.ts:8:9 › authenticate employee@automation.com user (3.0s)
+     5 …y-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Employees link'
+AZURE_OPENAI_MODEL_NAME: gpt-4o
+AZURE_OPENAI_API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjU0MzEzNTIsInVzZXJJZCI6IndrcmFzb3dza2kiLCJjb3N0Q2VudGVyIjoiVGVzdCBDYXNlcyBHZW5lcmF0b3IiLCJlbWFpbCI6IiIsInVzZXJuYW1lIjoiIn0.EGg6pU0WEXDVDvN7eUck6QJpSIaDmPkGGWFDu9BoD_I
+AZURE_OPENAI_API_ENDPOINT: http://100.78.22.77:18000/proxy
+openaiBaseUrl: http://100.78.22.77:18000/proxy/openai/deployments/gpt-4o
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_hKwjKNYxq5V9dgexOs6gQPfb',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_hKwjKNYxq5V9dgexOs6gQPfb',
+  content: '{"elementIds":["df0791e9-fad0-467a-b47b-b32af2cb434b","ad90276f-b135-40fe-9941-13b4b9b22eda"],"count":2}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_SHnAddVNNfZP7goRGnZ6Pi6d',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_SHnAddVNNfZP7goRGnZ6Pi6d',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_PtwX9CuRsubTGsCxVKupJBoG',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_PtwX9CuRsubTGsCxVKupJBoG',
+  content: '{"routeName":null,"url":"https://staging-app.travelbank.com/organizations/5f2b4fc18b85550012463331/employees","candidates":["templates/organizations/organization/employees/delegate-users/index.hbs","templates/organizations/organization/employees/departments/index.hbs","templates/organizations/organization/employees/user-directory/index.hbs","templates/organizations/organization/employees/index.hbs","templates/organizations/organization/employees/user-directory/loading.hbs","templates/organizations/organization/employees.hbs","templates/organizations/organization/expenses/expense-policy/show/index.hbs","templates/organizations/organization/expenses/categories/index.hbs","templates/organizations/organization/expenses/expense-policy/index.hbs","templates/organizations/organization/travel/car-rental-codes/index.hbs","templates/organizations/organization/travel/custom-fields/index.hbs","templates/organizations/organization/travel/rewards-budget-policy/index.hbs"],"primaryTemplate":"templates/organizations/organization/employees/delegate-users/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_DG8Zl9SCHTkhNTgoryxRkfx1',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_DG8Zl9SCHTkhNTgoryxRkfx1',
+  content: '{"openFile":"templates/organizations/organization/employees/delegate-users/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+     5 …settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Departments link'
+      id: 'call_yL3y27yV2GEhun2MQ5uv9Nee',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_yL3y27yV2GEhun2MQ5uv9Nee',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The task of navigating to the "Employees" link and opening the related template, `templates/organizations/organization/employees/delegate-users/index.hbs`, has been successfully completed.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The task of navigating to the "Employees" link and opening the related template, `templates/organizations/organization/employees/delegate-users/index.hbs`, has been successfully completed.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T17:49:30.547Z",
+    "elementId": "ad90276f-b135-40fe-9941-13b4b9b22eda",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "href": "/organizations/5f2b4fc18b85550012463331/employees",
+        "class": "nav-items__link  active",
+        "aria-label": "Employees",
+        "data-test-link": "employees-settings"
+      },
+      "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees\" class=\"nav-items__link  active\" aria-label=\"Employees\" data-test-link=\"employees-settings\" data-element-id=\"ad90276f-b135-40fe-9941-13b4b9b22eda\">\n  \n    <i class=\"icon-employees-settings\"></i>\n  <!---->\n  Employees\n  \n\n</a>",
+      "text": "Employees"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_EhaxhihBDlJPUmkHF2DKidwr',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_EhaxhihBDlJPUmkHF2DKidwr',
+  content: '{"elementId":"9ee375c9-1814-4a7d-9386-e995fc496d2c"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_WtX2daZutIKcRBqAQWcRyR3A',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_WtX2daZutIKcRBqAQWcRyR3A',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_EuJDnZ5mQHT50IQMPvriri4e',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_EuJDnZ5mQHT50IQMPvriri4e',
+  content: '{"routeName":null,"url":"https://staging-app.travelbank.com/organizations/5f2b4fc18b85550012463331/employees/departments","candidates":["templates/organizations/organization/employees/departments/index.hbs","templates/organizations/organization/employees/delegate-users/index.hbs","templates/organizations/organization/employees/user-directory/index.hbs","templates/organizations/organization/employees/index.hbs","templates/organizations/organization/employees/user-directory/loading.hbs","templates/organizations/organization/employees.hbs","templates/organizations/organization/expenses/expense-policy/show/index.hbs","templates/organizations/organization/expenses/categories/index.hbs","templates/organizations/organization/expenses/expense-policy/index.hbs","templates/organizations/organization/travel/car-rental-codes/index.hbs","templates/organizations/organization/travel/custom-fields/index.hbs","templates/organizations/organization/travel/rewards-budget-policy/index.hbs"],"primaryTemplate":"templates/organizations/organization/employees/departments/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_0uWuMmeI8oEdPih1xskUj57Q',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_0uWuMmeI8oEdPih1xskUj57Q',
+  content: '{"openFile":"templates/organizations/organization/employees/departments/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+     5 …/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Click on Add Department button'
+    {
+      function: [Object],
+      id: 'call_higtRmZyt8q6TDKrU8JfZnoQ',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_higtRmZyt8q6TDKrU8JfZnoQ',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Departments" link was successfully clicked, and the corresponding template file, `templates/organizations/organization/employees/departments/index.hbs`, has been opened.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Departments" link was successfully clicked, and the corresponding template file, `templates/organizations/organization/employees/departments/index.hbs`, has been opened.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T17:49:41.994Z",
+    "elementId": "9ee375c9-1814-4a7d-9386-e995fc496d2c",
+    "element": {
+      "tag": "a",
+      "attributes": {
+        "href": "/organizations/5f2b4fc18b85550012463331/employees/departments",
+        "class": "nav-items__link ",
+        "aria-label": "Departments"
+      },
+      "outerHTML": "<a href=\"/organizations/5f2b4fc18b85550012463331/employees/departments\" class=\"nav-items__link \" aria-label=\"Departments\" data-element-id=\"9ee375c9-1814-4a7d-9386-e995fc496d2c\">\n  \n<!---->  <!---->\n  Departments\n  \n\n</a>",
+      "text": "Departments"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_CL0BlmeyK60hTSNW4lTtiM0g',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_CL0BlmeyK60hTSNW4lTtiM0g',
+  content: '{"elementId":"1843d310-52b6-4e93-ae1e-31b679fa1cd9"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_8Ap0DJaaA56NCQaqr3n602V5',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_8Ap0DJaaA56NCQaqr3n602V5',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_gW7iypp4GKc1mO4wzY38GuSR',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_gW7iypp4GKc1mO4wzY38GuSR',
+  content: '{"routeName":null,"url":"https://staging-app.travelbank.com/organizations/5f2b4fc18b85550012463331/employees/departments","candidates":["templates/organizations/organization/employees/departments/index.hbs","templates/organizations/organization/employees/delegate-users/index.hbs","templates/organizations/organization/employees/user-directory/index.hbs","templates/organizations/organization/employees/index.hbs","templates/organizations/organization/employees/user-directory/loading.hbs","templates/organizations/organization/employees.hbs","templates/organizations/organization/expenses/expense-policy/show/index.hbs","templates/organizations/organization/expenses/categories/index.hbs","templates/organizations/organization/expenses/expense-policy/index.hbs","templates/organizations/organization/travel/car-rental-codes/index.hbs","templates/organizations/organization/travel/custom-fields/index.hbs","templates/organizations/organization/travel/rewards-budget-policy/index.hbs"],"primaryTemplate":"templates/organizations/organization/employees/departments/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_78pXcvICF6BmqevEcGgGwJGo',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_78pXcvICF6BmqevEcGgGwJGo',
+  content: '{"openFile":"templates/organizations/organization/employees/departments/index.hbs"}'
+}
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+     5 …s/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Fill in department name with WojtekTest'
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_mXx6TbkgAiLmZNFbqQzGpWhC',
+  content: '{"success":true}'
+}
+> message {
+  annotations: [],
+  content: 'The "Add Department" button was successfully clicked, and the related template file (`templates/organizations/organization/employees/departments/index.hbs`) was opened as instructed.',
+  refusal: null,
+  role: 'assistant',
+  parsed: null
+}
+> finalContent The "Add Department" button was successfully clicked, and the related template file (`templates/organizations/organization/employees/departments/index.hbs`) was opened as instructed.
+> lastFunctionResult {}
+> interactionLog [
+  {
+    "action": "locator_click",
+    "timestamp": "2025-10-07T17:50:33.433Z",
+    "elementId": "1843d310-52b6-4e93-ae1e-31b679fa1cd9",
+    "element": {
+      "tag": "button",
+      "attributes": {
+        "id": "add_department",
+        "tabindex": "0",
+        "class": "desktop-button\n    \n    \n    \n    \n    \n    \n    \n    \n    \n    \n    ",
+        "data-test-button": "add-department",
+        "type": "button"
+      },
+  ✘  5 [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] (1.7m) \n    \n    \" data-test-button=\"add-department\" type=\"button\" data-element-id=\"1843d310-52b6-4e93-ae1e-31b679fa1cd9\">\n<!----><!---->  Add Department\n<!----></button>",
+      "text": "Add Department"
+    }
+  }
+]
+> message {
+  annotations: [],
+  content: null,
+  refusal: null,
+  role: 'assistant',
+  tool_calls: [
+    {
+      function: [Object],
+      id: 'call_pe7Uon2U2FIXdelIPnoRYrr4',
+      type: 'function'
+    },
+    {
+      function: [Object],
+      id: 'call_eGud8ya6BRx4LdX340pUyiJf',
+      type: 'function'
+    }
+  ],
+  parsed: null
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_pe7Uon2U2FIXdelIPnoRYrr4',
+  content: '{"elementId":"12fdafdd-ea8d-4524-98d2-2f55562472f4"}'
+}
+> message {
+  role: 'tool',
+  tool_call_id: 'call_eGud8ya6BRx4LdX340pUyiJf',
+  content: '{"routeName":null,"url":"https://staging-app.travelbank.com/organizations/5f2b4fc18b85550012463331/employees/departments","candidates":["templates/organizations/organization/employees/departments/index.hbs","templates/organizations/organization/employees/delegate-users/index.hbs","templates/organizations/organization/employees/user-directory/index.hbs","templates/organizations/organization/employees/index.hbs","templates/organizations/organization/employees/user-directory/loading.hbs","templates/organizations/organization/employees.hbs","templates/organizations/organization/expenses/expense-policy/show/index.hbs","templates/organizations/organization/expenses/categories/index.hbs","templates/organizations/organization/expenses/expense-policy/index.hbs","templates/organizations/organization/travel/car-rental-codes/index.hbs","templates/organizations/organization/travel/custom-fields/index.hbs","templates/organizations/organization/travel/rewards-budget-policy/index.hbs"],"primaryTemplate":"templates/organizations/organization/employees/departments/index.hbs"}'
+}
+
+
+  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
+
+    Test timeout of 100000ms exceeded.
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
+  4 passed (2.8m)
