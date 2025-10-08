@@ -18,6 +18,7 @@ async function runFinalCoverage(actions: Actions) {
   if (!fn) return;
 
   try {
+    console.log("[HBS coverage] final check starting");
     const report: any = await fn({}, undefined as any);
     const coverage =
       typeof report?.coverage === "number" ? report.coverage : Number.NaN;
@@ -84,6 +85,10 @@ export const completeTask = async (
     }
   }
 
+  console.log(
+    `[LLM] Starting tool run with model ${task.options?.model ?? "gpt-4o"}`,
+  );
+
   const runner = openai.beta.chat.completions
     .runTools({
       model: task.options?.model ?? "gpt-4o",
@@ -117,6 +122,7 @@ export const completeTask = async (
     });
 
   const finalContent = await runner.finalContent();
+  console.log("[LLM] Tool run completed");
 
   if (debug) {
     console.log("> finalContent", finalContent);

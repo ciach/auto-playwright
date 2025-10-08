@@ -319,6 +319,20 @@ export const createActions = (
     }
   };
 
+  const previewForLog = (value: unknown, max = 200) => {
+    try {
+      const serialized = JSON.stringify(value);
+      if (!serialized) return serialized;
+      return serialized.length > max ? `${serialized.slice(0, max)}…` : serialized;
+    } catch {
+      if (value === null || value === undefined) return String(value);
+      if (typeof value === "string") {
+        return value.length > max ? `${value.slice(0, max)}…` : value;
+      }
+      return String(value);
+    }
+  };
+
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
   };
@@ -2104,17 +2118,30 @@ export const createActions = (
     },
   };
 
-  if (ENABLE_PER_ACTION_HBS_COVERAGE) {
-    for (const [name, action] of Object.entries(actions)) {
-      if (name === "autoCheckHbsCoverage") continue;
-      if (!shouldTriggerCoverage(name)) continue;
-      const originalFunction = action.function;
-      action.function = (async (args: any, runner: any) => {
+  for (const [name, action] of Object.entries(actions)) {
+    if (name === "autoCheckHbsCoverage") continue;
+    const originalFunction = action.function;
+    action.function = (async (args: any, runner: any) => {
+      console.log(
+        `[LLM action] ${name} invoked with args:`,
+        previewForLog(args),
+      );
+      try {
         const result = await originalFunction(args, runner);
-        await maybeRunCoverageAfter(name);
+        console.log(
+          `[LLM action] ${name} completed with result:`,
+          previewForLog(result),
+        );
+        if (shouldTriggerCoverage(name)) {
+          console.log(`[HBS coverage] verifying after ${name}`);
+          await maybeRunCoverageAfter(name);
+        }
         return result;
-      }) as typeof originalFunction;
-    }
+      } catch (error) {
+        console.error(`[LLM action] ${name} failed`, error);
+        throw error;
+      }
+    }) as typeof originalFunction;
   }
 
   return actions;
