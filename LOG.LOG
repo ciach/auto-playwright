@@ -1,35 +1,21 @@
-> snapshot.dom written to var/llm/snapshot-2025-10-07T19-31-04-697Z.html
-> message {
-  annotations: [],
-  content: null,
-  refusal: null,
-  role: 'assistant',
-  tool_calls: [
-    {
-      function: [Object],
-      id: 'call_UCHZJaBWUN3CPDWeQ5dUjt4M',
-      type: 'function'
-    }
-  ],
-  parsed: null
-}
+wxkraso@MS-TJMF9N6T3D tests-e2e % npx playwright test auto-departments-two.spec.ts --trace on --retries=0 --reporter=list
+
+Running 5 tests using 1 worker
+
+  ✓  1 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation.com users (35.2s)
+  ✓  2 [preload-users] › tests/preload-users.setup.ts:22:7 › preload automation-allocation.com users (6.8s)
+  ✓  3 [setup] › tests/auth.setup.ts:8:9 › authenticate admin@automation.com user (5.5s)
+  ✓  4 [setup] › tests/auth.setup.ts:8:9 › authenticate employee@automation.com user (1.3s)
+  ✘  5 [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] (1.7m)
+> snapshot.dom written to var/llm/snapshot-2025-10-08T01-53-38-990Z.html
+[LLM] Starting tool run with model gpt-4o
 
 
-  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] › auto-playwright.ai 'Go to Employees link' 
+  1) [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
 
-    Error: locator.evaluate: Timeout 20000ms exceeded.
-    Call log:
-      - waiting for locator('[data-tags=\'employees-settings\']').first()
+    Test timeout of 100000ms exceeded.
 
-        at ChatCompletionRunner._EventStream_handleError (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/EventStream.ts:159:40)
-    [cause]: TimeoutError: locator.evaluate: Timeout 20000ms exceeded.
-    Call log:
-      - waiting for locator('[data-tags=\'employees-settings\']').first()
-
-        at Object.function (/Users/wxkraso/auto-playwright/dist/createActions.js:390:22)
-        at ChatCompletionRunner._runTools (/Users/wxkraso/auto-playwright/node_modules/openai/src/lib/AbstractChatCompletionRunner.ts:470:45)
-
-    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
     test-results/company-settings-employees-9fb79--add-auto-delegate---xxxxx--chromium/trace.zip
     Usage:
 
@@ -39,4 +25,4 @@
 
   1 failed
     [chromium] › tests/company-settings/employees/auto-departments-two.spec.ts:23:5 › can add auto delegate - [xxxxx] 
-  4 passed (1.3m)
+  4 passed (2.6m)
