@@ -4,7 +4,20 @@ import { existsSync, readFileSync } from "fs";
 import { RunnableFunctionWithParse } from "openai/lib/RunnableFunction";
 import * as path from "path";
 import { z } from "zod";
-import { TEMPLATE_MANIFEST_PATH, TEMPLATE_ROOT_DIR } from "./config";
+import {
+  ENABLE_PER_ACTION_HBS_COVERAGE,
+  HBS_COVERAGE_FAIL_BELOW_THRESHOLD,
+  HBS_COVERAGE_MIN_THRESHOLD,
+  HBS_COVERAGE_TRIGGER_PREFIXES,
+  TEMPLATE_MANIFEST_PATH,
+  TEMPLATE_ROOT_DIR,
+} from "./config";
+import { ensureDataTags } from "./ensureDataTags";
+import {
+  extractSelectorsFromHbs,
+  readHbsAbsolute,
+  validateSelectorsAgainstDom,
+} from "./hbsSelectors";
 import { resolveTemplatesForUrl } from "./resolveTemplates";
 import { getSanitizeOptions } from "./sanitizeHtml";
 import { ElementInteraction, TemplateManifest } from "./types";
@@ -139,6 +152,173 @@ export const createActions = (
   const resolveForUrl = (url: string, manifest: Manifest | null) =>
     resolveTemplatesForUrl(url, manifest);
 
+  type AttributeSignal = {
+    attr: "data-test" | "aria-label" | "id";
+    key?: string;
+    value: string;
+    needle: string;
+  };
+
+  const fallbackTemplate = (stack: { candidates: string[]; primary: string | null }) =>
+    stack.primary ?? stack.candidates[0] ?? "templates/application.hbs";
+
+  const getLastInteractionAttributes = (): Record<string, string> | null => {
+    for (let i = interactionLog.length - 1; i >= 0; i--) {
+      const attrs = interactionLog[i]?.element?.attributes;
+      if (attrs && Object.keys(attrs).length > 0) {
+        return attrs;
+      }
+    }
+    return null;
+  };
+
+  const buildSignalsFromAttributes = (attrs: Record<string, string>): AttributeSignal[] => {
+    const signals: AttributeSignal[] = [];
+    for (const [rawName, rawValue] of Object.entries(attrs)) {
+      if (!rawValue) continue;
+      const name = rawName.toLowerCase();
+      const value = String(rawValue).toLowerCase();
+      if (name === "aria-label" || name === "id") {
+        signals.push({
+          attr: name as "aria-label" | "id",
+          value,
+          needle: `${name}="${value}"`,
+        });
+      } else if (name === "data-test") {
+        signals.push({ attr: "data-test", value, needle: `${name}="${value}"` });
+      } else if (name.startsWith("data-test-")) {
+        const key = name.slice("data-test-".length);
+        signals.push({ attr: "data-test", key, value, needle: `${name}="${value}"` });
+      }
+    }
+    return signals;
+  };
+
+  const candidateMatchesSignals = (candidate: string, signals: AttributeSignal[]): boolean => {
+    if (!signals.length) return false;
+    const extraction = extractSelectorsFromHbs(candidate);
+    let rawContent: string | null = null;
+    const ensureRaw = () => {
+      if (rawContent === null) {
+        rawContent = readHbsAbsolute(candidate).content.toLowerCase();
+      }
+      return rawContent;
+    };
+
+    return signals.some((signal) => {
+      if (signal.attr === "data-test") {
+        const structured = extraction.selectors.dataTest.some((sel) => {
+          if (signal.key && sel.key) {
+            return sel.key === signal.key && sel.value === signal.value;
+          }
+          return !signal.key && !sel.key && sel.value === signal.value;
+        });
+        if (structured) return true;
+        return ensureRaw().includes(signal.needle);
+      }
+      if (signal.attr === "aria-label") {
+        if (extraction.selectors.ariaLabel.some((sel) => sel.value === signal.value)) {
+          return true;
+        }
+        return ensureRaw().includes(signal.needle);
+      }
+      if (signal.attr === "id") {
+        if (extraction.selectors.id.some((sel) => sel.value === signal.value)) {
+          return true;
+        }
+        return ensureRaw().includes(signal.needle);
+      }
+      return false;
+    });
+  };
+
+  const pickTemplateUsingLastElement = (
+    stack: { candidates: string[]; primary: string | null },
+  ): {
+    chosen: string;
+    matches: string[];
+    lastElementAttributes: Record<string, string> | null;
+  } => {
+    const attrs = getLastInteractionAttributes();
+    const fallback = fallbackTemplate(stack);
+    if (!attrs) {
+      return { chosen: fallback, matches: [], lastElementAttributes: null };
+    }
+
+    const signals = buildSignalsFromAttributes(attrs);
+    if (!signals.length) {
+      return { chosen: fallback, matches: [], lastElementAttributes: attrs };
+    }
+
+    const matches: string[] = [];
+    for (const candidate of stack.candidates) {
+      if (candidateMatchesSignals(candidate, signals)) {
+        matches.push(candidate);
+      }
+    }
+
+    const chosen = matches[0] ?? fallback;
+    return { chosen, matches, lastElementAttributes: attrs };
+  };
+
+  const computeHbsCoverageReport = async () => {
+    const manifest = tryLoadManifest();
+    const url = page.url();
+    const stack = resolveForUrl(url, manifest);
+    const picked = pickTemplateUsingLastElement(stack);
+    const templatePath = picked.chosen;
+    const extraction = extractSelectorsFromHbs(templatePath);
+    const html = await page.content();
+    const validation = validateSelectorsAgainstDom(html, extraction);
+
+    return {
+      url,
+      template: templatePath,
+      counts: extraction.counts,
+      coverage: validation.coverage,
+      missing: validation.missing.slice(0, 25),
+      matches: picked.matches,
+      lastElementAttributes: picked.lastElementAttributes,
+      candidates: stack.candidates,
+    };
+  };
+
+  const shouldTriggerCoverage = (name: string) =>
+    ENABLE_PER_ACTION_HBS_COVERAGE &&
+    HBS_COVERAGE_TRIGGER_PREFIXES.some((prefix) => name.startsWith(prefix));
+
+  const maybeRunCoverageAfter = async (actionName: string) => {
+    if (!ENABLE_PER_ACTION_HBS_COVERAGE) return;
+
+    let report;
+    try {
+      report = await computeHbsCoverageReport();
+    } catch (error) {
+      console.warn(
+        `[HBS coverage] ${actionName} skipped:`,
+        (error as Error)?.message ?? String(error),
+      );
+      return;
+    }
+
+    const payload = { ...report, triggeredBy: actionName };
+    if (report.coverage < HBS_COVERAGE_MIN_THRESHOLD) {
+      console.warn(
+        `[HBS coverage] ${actionName} low`,
+        JSON.stringify(payload),
+      );
+      if (HBS_COVERAGE_FAIL_BELOW_THRESHOLD) {
+        throw new Error(
+          `[HBS coverage] ${actionName} coverage ${report.coverage.toFixed(
+            2,
+          )} below threshold ${HBS_COVERAGE_MIN_THRESHOLD}`,
+        );
+      }
+    } else {
+      console.log(`[HBS coverage] ${actionName}`, JSON.stringify(payload));
+    }
+  };
+
   const getLocator = (elementId: string) => {
     return page.locator(`[data-element-id="${elementId}"]`);
   };
@@ -191,7 +371,7 @@ export const createActions = (
     }
   };
 
-  return {
+  const actions: Record<string, RunnableFunctionWithParse<any>> = {
     // ---- URL/context helper (emberless) ----
     getRouteContext: {
       function: async () => {
@@ -226,7 +406,124 @@ export const createActions = (
       },
       name: "resolveTemplateForCurrentPage",
       description:
-        "Resolves the most specific HBS template file for the current page using only URL + template manifest.",
+        "Resolves the most specific HBS template for the current page using URL + manifest only.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
+    },
+
+    getSelectorsForTemplate: {
+      function: async ({ path: relOrAbs }: { path: string }) => {
+        return extractSelectorsFromHbs(relOrAbs);
+      },
+      name: "getSelectorsForTemplate",
+      description:
+        "Reads an HBS file and extracts selectors (data-test-*, aria-label, id).",
+      parse: (args: string) => {
+        return z
+          .object({
+            path: z.string(),
+          })
+          .parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {
+          path: {
+            type: "string",
+            description: "Relative or absolute path to the HBS file.",
+          },
+        },
+        required: ["path"],
+      },
+    },
+
+    getSelectorsForCurrentPage: {
+      function: async () => {
+        const manifest = tryLoadManifest();
+        const url = page.url();
+        const stack = resolveForUrl(url, manifest);
+        const templatePath = fallbackTemplate(stack);
+        const extraction = extractSelectorsFromHbs(templatePath);
+        return { url, primaryTemplate: templatePath, ...extraction };
+      },
+      name: "getSelectorsForCurrentPage",
+      description:
+        "Resolves the current page template (URL-only) and returns its extracted selectors.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
+    },
+
+    validateTemplateSelectorsAgainstDom: {
+      function: async ({ path: relOrAbs }: { path: string }) => {
+        const extraction = extractSelectorsFromHbs(relOrAbs);
+        const html = await page.content();
+        return validateSelectorsAgainstDom(html, extraction);
+      },
+      name: "validateTemplateSelectorsAgainstDom",
+      description:
+        "Validates that selectors extracted from an HBS file appear in the current DOM.",
+      parse: (args: string) => {
+        return z
+          .object({
+            path: z.string(),
+          })
+          .parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {
+          path: {
+            type: "string",
+            description: "Relative or absolute path to the HBS file.",
+          },
+        },
+        required: ["path"],
+      },
+    },
+
+    resolveTemplateUsingLastElementAndHbs: {
+      function: async () => {
+        const manifest = tryLoadManifest();
+        const url = page.url();
+        const stack = resolveForUrl(url, manifest);
+        const picked = pickTemplateUsingLastElement(stack);
+        return {
+          url,
+          candidates: stack.candidates,
+          chosen: picked.chosen,
+          matches: picked.matches,
+          lastElementAttributes: picked.lastElementAttributes,
+        };
+      },
+      name: "resolveTemplateUsingLastElementAndHbs",
+      description:
+        "Try to identify the template whose HBS contains selectors matching the last interacted element.",
+      parse: (args: string) => {
+        return z.object({}).parse(JSON.parse(args));
+      },
+      parameters: {
+        type: "object",
+        properties: {},
+      },
+    },
+
+    autoCheckHbsCoverage: {
+      function: async () => {
+        return computeHbsCoverageReport();
+      },
+      name: "autoCheckHbsCoverage",
+      description:
+        "Resolve the likely template, extract its selectors, validate against the DOM, and report coverage.",
       parse: (args: string) => {
         return z.object({}).parse(JSON.parse(args));
       },
@@ -440,6 +737,7 @@ export const createActions = (
     },
     locateElement: {
       function: async (args: { cssSelector: string }) => {
+        await ensureDataTags(page);
         const locator = page.locator(args.cssSelector);
         const elementId = randomUUID();
         elementSelectors.set(elementId, args.cssSelector);
@@ -1805,4 +2103,19 @@ export const createActions = (
       },
     },
   };
+
+  if (ENABLE_PER_ACTION_HBS_COVERAGE) {
+    for (const [name, action] of Object.entries(actions)) {
+      if (name === "autoCheckHbsCoverage") continue;
+      if (!shouldTriggerCoverage(name)) continue;
+      const originalFunction = action.function;
+      action.function = (async (args: any) => {
+        const result = await originalFunction(args);
+        await maybeRunCoverageAfter(name);
+        return result;
+      }) as typeof originalFunction;
+    }
+  }
+
+  return actions;
 };

@@ -4,8 +4,46 @@ import * as path from "path";
 import { type Page, TaskMessage, TaskResult, ElementInteraction } from "./types";
 import { prompt, SYSTEM_PROMPT } from "./prompt";
 import { createActions } from "./createActions";
+import {
+  HBS_COVERAGE_FAIL_BELOW_THRESHOLD,
+  HBS_COVERAGE_MIN_THRESHOLD,
+} from "./config";
 
 const defaultDebug = process.env.AUTO_PLAYWRIGHT_DEBUG === "true";
+
+type Actions = ReturnType<typeof createActions>;
+
+async function runFinalCoverage(actions: Actions) {
+  const fn = actions.autoCheckHbsCoverage?.function;
+  if (!fn) return;
+
+  try {
+    const report = await fn({});
+    const coverage =
+      typeof report?.coverage === "number" ? report.coverage : Number.NaN;
+    const template = report?.template ?? "(unknown)";
+    console.log("[HBS coverage] final", JSON.stringify(report));
+
+    if (!Number.isNaN(coverage) && coverage < HBS_COVERAGE_MIN_THRESHOLD) {
+      const missing = JSON.stringify(report?.missing ?? []).slice(0, 400);
+      const message =
+        `[HBS coverage] LOW (${(coverage * 100).toFixed(0)}%) for ${template} at final check. ` +
+        `Missing selectors: ${missing}`;
+      if (HBS_COVERAGE_FAIL_BELOW_THRESHOLD) {
+        throw new Error(message);
+      }
+      console.warn(message);
+    }
+  } catch (error) {
+    const message = `[HBS coverage] final check failed: ${
+      (error as Error)?.message ?? String(error)
+    }`;
+    if (HBS_COVERAGE_FAIL_BELOW_THRESHOLD) {
+      throw new Error(message);
+    }
+    console.warn(message);
+  }
+}
 
 export const completeTask = async (
   page: Page,
@@ -92,6 +130,8 @@ export const completeTask = async (
     console.log("> lastFunctionResult", lastFunctionResult);
     console.log("> interactionLog", JSON.stringify(interactionLog, null, 2));
   }
+
+  await runFinalCoverage(actions);
 
   return {
     ...(lastFunctionResult as TaskResult),

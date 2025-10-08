@@ -47,7 +47,7 @@ export type RouteContext = {
   queryParams?: Record<string, unknown>;
 };
 
-// Snapshot extended for emberless mapping
+// ---- Snapshot includes DOM and our inferred template candidates ----
 export type Snapshot = {
   dom: string;
   url?: string;
@@ -71,4 +71,29 @@ export type TemplateManifest = {
     ariaLabel?: Record<string, string[]>;
     id?: Record<string, string[]>;
   };
+};
+
+// ---- HBS extraction + validation ----
+export type HbsSelector = {
+  attr: "data-test" | "aria-label" | "id";
+  key?: string; // for data-test-<key>
+  value: string;
+  raw: string; // raw attribute text as in HBS
+};
+
+export type HbsExtraction = {
+  path: string;
+  selectors: {
+    dataTest: HbsSelector[];
+    ariaLabel: HbsSelector[];
+    id: HbsSelector[];
+  };
+  counts: { dataTest: number; ariaLabel: number; id: number; total: number };
+};
+
+export type HbsValidation = {
+  path: string;
+  present: HbsSelector[];
+  missing: HbsSelector[];
+  coverage: number; // present / total
 };
