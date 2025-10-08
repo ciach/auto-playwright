@@ -2109,8 +2109,8 @@ export const createActions = (
       if (name === "autoCheckHbsCoverage") continue;
       if (!shouldTriggerCoverage(name)) continue;
       const originalFunction = action.function;
-      action.function = (async (args: any) => {
-        const result = await originalFunction(args);
+      action.function = (async (args: any, runner: any) => {
+        const result = await originalFunction(args, runner);
         await maybeRunCoverageAfter(name);
         return result;
       }) as typeof originalFunction;

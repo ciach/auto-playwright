@@ -18,7 +18,7 @@ async function runFinalCoverage(actions: Actions) {
   if (!fn) return;
 
   try {
-    const report = await fn({});
+    const report: any = await fn({}, undefined as any);
     const coverage =
       typeof report?.coverage === "number" ? report.coverage : Number.NaN;
     const template = report?.template ?? "(unknown)";
